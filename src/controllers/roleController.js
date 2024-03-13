@@ -52,14 +52,12 @@ const roleController = {
     
     updateRole: async (req, res) => {
         try {
-            const id = req.body.role_id; // ID của vai trò cần cập nhật
-            const updatedRoleName = req.body.role_name; // Tên mới của vai trò
+            const updatedRoleName = req.body.role_name; 
             // Find the role by id
-            const updatedRole = await Role.findByIdAndUpdate(id, { role_name: updatedRoleName }, { new: true });
+            const updatedRole = await Role.findByIdAndUpdate(req.params.id, { role_name: updatedRoleName }, { new: true });
             if (!updatedRole) {
                 return res.status(404).json({ message: "Cannot find Role" });
             }
-
             console.log("Updated role successfully");
             res.status(200).json(updatedRole);
         } catch (error) {
