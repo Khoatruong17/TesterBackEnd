@@ -1,15 +1,20 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+
+
+const app = express();
 
 // Set the view engine
 const configViewEngine = require('./config/viewEngine');
 const webRouters = require('./routers/web');
 const connection = require('./config/database');
-const Kitten = require('./models/kitten');
 
-const app = express();
+
+
 
 
 //Config templete engine
