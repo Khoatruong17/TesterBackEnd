@@ -19,7 +19,7 @@ configViewEngine(app);
 app.use(express.json());
 //Router
 app.use("/v1/auth", authRoute);
-app.use("/v1/role", roleRoute);
+app.use("/v1", roleRoute);
 
 
 //self running function

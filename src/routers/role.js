@@ -1,6 +1,9 @@
-const router = require('express').Router();
+const routerAPI = require('express').Router();
 const roleController = require("../controllers/roleController");
 
-router.post("/addrole", roleController.addRole);
+routerAPI.post("/role", roleController.createRole);
+routerAPI.get("/role", roleController.getAllRole);
+routerAPI.delete("/role/:id", roleController.deleteRole);
+routerAPI.put("/role/:id", roleController.updateRole);
 
-module.exports = router
+module.exports = routerAPI

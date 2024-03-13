@@ -1,15 +1,11 @@
 const mongoose = require('mongoose')
 const RoleSchema = new mongoose.Schema({
-    role_Id: {
+    role_name: {
         type: String,
         minLength: 1,
-        maxLength: 20
-        
-    },
-    role_Name: {
-        type: String,
-        minLength: 1,
-        maxLength: 50
+        maxLength: 50,
+        required: true,
+        unique: true 
     }
     
 }, {timestamps: true}

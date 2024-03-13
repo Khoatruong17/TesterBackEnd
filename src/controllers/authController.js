@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 
-const roleController = {
+const authController = {
     //Register
     registerUser: async (req, res) => {
         try {
@@ -59,5 +59,4 @@ const roleController = {
     }
 }
 
-
-module.exports = roleController;
+module.exports = authController;
