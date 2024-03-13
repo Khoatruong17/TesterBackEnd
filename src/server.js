@@ -1,25 +1,25 @@
 require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const mongoose = require('mongoose');
-
 
 const app = express();
 
 // Set the view engine
 const configViewEngine = require('./config/viewEngine');
-const webRouters = require('./routers/web');
 const connection = require('./config/database');
-
-
-
-
+const authRoute = require('./routers/auth');
+const roleRoute = require('./routers/role');
 
 //Config templete engine
 configViewEngine(app);
-app.use('/', webRouters);
+
+app.use(express.json());
+//Router
+app.use("/v1/auth", authRoute);
+app.use("/v1/role", roleRoute);
 
 
 //self running function
@@ -37,3 +37,8 @@ const hostname = process.env.HOST_NAME;
     }
 })()
 
+
+// Authentication function
+
+
+// Authorization function

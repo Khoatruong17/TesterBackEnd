@@ -1,11 +1,31 @@
-const mongoose = require('mongoose');
-
-//Create database
+const mongoose = require('mongoose')
 const userSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    city: String
-});
-const Kitten = mongoose.model('user', userSchema);
+    username:{
+        type : String,
+        required: true,
+        minlength: 6,
+        maxlength: 20,
+        unique: true 
+    },
+    password:{
+        type : String,
+        required: true,
+        minlength: 6,
+    },
+    email:{
+        type : String,
+        required: true,
+        minlength: 6,
+        maxlength: 50,
+        unique: true
+    },
+    role_Id:{
+         type : String,
+    },
+    faculty_Id:{
+        type : String,
+    }
+}, {timestamps: true}
+)
 
-module.exports = Kitten;
+module.exports = mongoose.model('User', userSchema)
