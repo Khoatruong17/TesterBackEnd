@@ -23,7 +23,7 @@ configViewEngine(app);
 
 app.use(express.json());
 //Router
-app.use("/v1/auth", userRoute);
+app.use("/v1", userRoute);
 app.use("/v1", roleRoute);
 app.use("/v1", facultyRoute);
 

@@ -3,7 +3,7 @@ const userController = require("../controllers/userController");
 
 
 routerAPI.post("/register", userController.Register);
-// routerAPI.post("/login", userController.loginUser);
+routerAPI.post("/login", userController.Login);
 // routerAPI.get("/user", userController.getUserList);
 
 module.exports = routerAPI
