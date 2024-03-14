@@ -1,5 +1,5 @@
 const routerAPI = require('express').Router();
-const roleController = require("../controllers/roleController");
+const roleController = require("../controllers/role.Controller");
 
 routerAPI.post("/role", roleController.createRole);
 routerAPI.get("/role", roleController.getAllRole);

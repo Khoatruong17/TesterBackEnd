@@ -1,5 +1,5 @@
 const routerAPI = require('express').Router();
-const facultyController = require("../controllers/facultyController");
+const facultyController = require("../controllers/faculty.Controller");
 
 routerAPI.post("/faculty", facultyController.createFaculty);
 routerAPI.get("/faculty", facultyController.getAllFaculty);

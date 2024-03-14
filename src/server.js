@@ -3,29 +3,49 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const bodyParser = require('body-parser');
+const { EventEmitter } = require('events');
 
 const app = express();
 
 // Set the view engine
 const configViewEngine = require('./config/viewEngine');
 const connection = require('./config/database');
-const userRoute = require('./routers/user');
-const roleRoute = require('./routers/role');
-const facultyRoute = require('./routers/faculty');
 
 //config bodyParser
 app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extends: true}));
 //app.use(express.urlencoded({ extended: true }))
 
-//Config templete engine
+//Config template engine
 configViewEngine(app);
 
 app.use(express.json());
+
+
+
+// Setup routes
+const authRoute = require('./routers/auth.Router');
+const roleRoute = require('./routers/role.Router');
+const facultyRoute = require('./routers/faculty.Router');
+const userRoute = require('./routers/user.Router');
+
 //Router
-app.use("/v1", userRoute);
+app.use("/v1", authRoute);
 app.use("/v1", roleRoute);
 app.use("/v1", facultyRoute);
+app.use("/v1", userRoute);
+
+
+// Set Max Listener 
+// create new EventEmitter
+const myEmitter = new EventEmitter();
+myEmitter.setMaxListeners(20); // Example, setMaxListeners to 20
+// Add listeners to event'
+for (let i = 0; i < 20; i++) {
+    myEmitter.on('event', () => {
+        console.log('Event occurred');
+    });
+}
 
 
 //self running function

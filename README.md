@@ -5,6 +5,7 @@
 * User:
 * Login ----> POST  http://localhost:8081/v1/login 
 * Register ----> POST  http://localhost:8081/v1/register
+* Get All Users ----> GET http://localhost:8081/v1/users
 * 
 * Role: 
 * Get ALL Role ----> GET http://localhost:8081/v1/role 

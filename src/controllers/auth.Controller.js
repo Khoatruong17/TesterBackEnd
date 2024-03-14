@@ -1,6 +1,6 @@
 //import {userService} from '../services/userService'
 
-const registerLoginService = require ('../services/registerloginService')
+const registerLoginService = require ('../services/registerLogin.Service')
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const RoleModel = require("../models/roleModel");
@@ -48,7 +48,6 @@ const Register = async (req, res) => {
         })
     }
 }
-
 
 
 module.exports = {
