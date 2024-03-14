@@ -1,8 +1,19 @@
 const mongoose = require('mongoose');
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const salt = bcrypt.genSaltSync(10);
 
+
+
+const hashUserPassword = async (password) => {
+    try {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        return hashedPassword;
+    } catch (error) {
+        console.error('Error hashing password:', error);
+        throw error; 
+    }
+};
 
 // check user email
 const checkEmail = async (userEmail) => {
@@ -28,25 +39,24 @@ const registerNewUser =  async (rawUserData) => {
     let isEmailExists = await checkUsername(rawUserData.username);
     if (isEmailExists == true) {
         return {
-            EM : "The email already exists",
+            EM : "The username already exists",
             EC : 1
         }
     }
     let isUsernameExists = await checkEmail(rawUserData.email);
     if (isUsernameExists == true) {
         return {
-            EM : "The username already exists",
+            EM : "The email already exists",
             EC : 1
         }
     }
     // hash user password
     let hashPassword = await hashUserPassword(rawUserData.password);
     // create new user
-    const email = rawUserData.email;
-    const newUser = mongoose.model('User', userSchema);
-    const user = new newUser({
+    //const newUser = mongoose.model('User', userSchema);
+    const user = new User({
         username: rawUserData.username,
-        email,
+        email : rawUserData.email,
         password: hashPassword,
         role_Id : rawUserData.role_id
     });

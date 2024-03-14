@@ -5,6 +5,18 @@ const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const Role = require("../models/roleModel");
 
+const Login = () => {
+    try {
+        return res.status(500).json({
+            EM: "error from server", //error message
+            EC: "-1", //error code
+            DT: "" //data
+        })
+    } catch (error) {
+        
+    }
+};
+
 const Register = async (req, res) => {
     try {
         // check missing data
@@ -16,7 +28,7 @@ const Register = async (req, res) => {
             })
         }
         // service create user
-        let data = await registerService.registerNewUser(res.body);
+        let data = await registerService.registerNewUser(req.body);
         return res.status(200).json({
             EM: data.EM, //create user success message
             EC: data.EC, 
@@ -30,8 +42,6 @@ const Register = async (req, res) => {
         })
     }
 }
-
-
 
 
 
