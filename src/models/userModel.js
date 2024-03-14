@@ -20,10 +20,12 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     role_Id:{
-         type : String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'roles' 
     },
     faculty_Id:{
-        type : String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'faculties' 
     }
 }, {timestamps: true}
 )

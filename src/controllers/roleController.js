@@ -1,5 +1,5 @@
 const express = require("express");
-const Role = require("../models/role");
+const Role = require("../models/roleModel");
 
 
 const roleController = {

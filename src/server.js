@@ -12,6 +12,7 @@ const configViewEngine = require('./config/viewEngine');
 const connection = require('./config/database');
 const authRoute = require('./routers/auth');
 const roleRoute = require('./routers/role');
+const facultyRoute = require('./routers/faculty');
 
 //Config templete engine
 configViewEngine(app);
@@ -20,6 +21,7 @@ app.use(express.json());
 //Router
 app.use("/v1/auth", authRoute);
 app.use("/v1", roleRoute);
+app.use("/v1", facultyRoute);
 
 
 //self running function

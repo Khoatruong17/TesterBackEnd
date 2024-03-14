@@ -1,9 +1,9 @@
 const express = require("express");
-const User = require("../models/user");
+const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 
 const authController = {
-    //Register
+    //Register (add user)
     registerUser: async (req, res) => {
         try {
             const salt = await bcrypt.genSalt(10);
