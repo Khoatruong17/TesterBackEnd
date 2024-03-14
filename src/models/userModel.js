@@ -7,17 +7,13 @@ const userSchema = new mongoose.Schema({
         maxlength: 20,
         unique: true 
     },
-    password:{
+    passwords:{
         type : String,
         required: true,
         minlength: 6,
     },
     email:{
-        type : String,
-        required: true,
-        minlength: 6,
-        maxlength: 50,
-        unique: true
+        type : String
     },
     role_Id:{
         type: mongoose.Schema.Types.ObjectId,

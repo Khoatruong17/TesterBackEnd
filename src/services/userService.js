@@ -30,7 +30,7 @@ const createNewUser = async ( username, email, password, role_Id, faculty_Id) =>
         }
 
         let hashedPassword = await hashUserPassword(password);
-        const newUser = new User({ username, email, hashedPassword, role_Id, faculty_Id });
+        const newUser = new User({ username, email, password: hashedPassword, role_Id, faculty_Id });
         const user = await newUser.save();
         return user;
     } catch (error) {
@@ -43,7 +43,6 @@ const GetallUser = async (req, res) =>{
         const user = await User.find();
         res.status(200).json(user);
         console.log("Get all users successfully");
-        return user;
     }catch(error){
         console.log("Error get all user: " + error);
         res.status(500).json({ error: error.message });

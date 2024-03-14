@@ -2,8 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -14,12 +13,17 @@ const userRoute = require('./routers/user');
 const roleRoute = require('./routers/role');
 const facultyRoute = require('./routers/faculty');
 
+//config bodyParser
+app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({extends: true}));
+//app.use(express.urlencoded({ extended: true }))
+
 //Config templete engine
 configViewEngine(app);
 
 app.use(express.json());
 //Router
-app.use("/v1", userRoute);
+app.use("/v1/auth", userRoute);
 app.use("/v1", roleRoute);
 app.use("/v1", facultyRoute);
 
