@@ -1,34 +1,8 @@
-const express = require("express");
+//import {userService} from '../services/userService'
+const userService = require('../services/userService')
 const User = require("../models/userModel");
 const Role = require("../models/roleModel");
-const bcrypt = require("bcrypt");
-
-const authController = {
-    //Register (add user)
-    registerUser: async (req, res) => {
-        try {
-            const salt = await bcrypt.genSalt(10);
-            const hashed = await bcrypt.hash(req.body.password, salt);
-
-            // Create a new user
-            const newUser = await new User({
-                username: req.body.username,
-                password: hashed,
-                email: req.body.email,
-                role_Id: req.body.role_Id,
-                faculty_Id: req.body.faculty_Id
-            });
-
-            // Save the user to the database
-            const user = await newUser.save();
-            console.log("Add role Successfully");
-            res.status(200).json(user);
-        } catch (error) {
-            console.log("Error register" + error);
-            res.status(500).json(error);
-        }
-    },
-
+const userController = {
     //Login
     loginUser: async (req, res) => {
         try {
@@ -46,10 +20,8 @@ const authController = {
                 if (userRole) {
                     welcomeMessage = `Welcome ${userRole.role_name}`;
                 } else {
-                    // Trường hợp không tìm thấy thông tin vai trò
-                    welcomeMessage = "Welcome (not Found)"; // Hoặc có thể định nghĩa một thông điệp mặc định khác
+                    welcomeMessage = "Welcome (not Found)";
                 }
-
                 res.status(200).json({ message: welcomeMessage, user });
                 console.log("Login Successfully");
             } else if (!user) { // If email is wrong
@@ -64,9 +36,9 @@ const authController = {
             console.log("Error login" + error);
             res.status(500).json(error);
         }
-    }
+    },
 
-}
+
 //     try {
 //         const user = await User.findOne({email: req.body.email});
 //         const validPassword = await bcrypt.compare(
@@ -97,6 +69,26 @@ const authController = {
 //         res.status(500).json(error);
 //     }
 //}
+    //Register (add user)
+    registerUser: async (req, res) => {
+        let { username, email, password, role_Id, faculty_Id } = req.body;
+
+        try {
+            // use userService to register user
+            await userService.createNewUser(username, email, password, role_Id, faculty_Id);
+            res.status(200).json({ message: "User registered successfully" });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    },
+
+    getUserList: async(req, res) => {
+        let userList = await userService.GetallUser();
+        res.status(200).json(userList);
+    }
+
+}
 
 
-module.exports = authController;
+module.exports = userController;
