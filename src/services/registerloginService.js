@@ -124,8 +124,6 @@ const UserLogin = async (rawData) => {
     }
 }
 
-
-
 module.exports = {
     registerNewUser,
     UserLogin
