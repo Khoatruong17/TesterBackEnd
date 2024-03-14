@@ -10,7 +10,6 @@ const roleController = {
             const newRole = await new Role({
                 role_name: req.body.role_name
             });
-
             // Save the user to the database
             const role = await newRole.save();
             console.log("Add role Successfully");
