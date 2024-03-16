@@ -34,41 +34,51 @@ const checkUsername = async (username) => {
 const registerNewUser = async (rawUserData) => {
     try {
         // check email are exists
-        let isEmailExists = await checkUsername(rawUserData.username);
-        if (isEmailExists == true) {
-            return {
-                EM: "The username already exists",
-                EC: 1
+        const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(rawUserData.email)
+        if (isEmail) {
+            let isEmailExists = await checkUsername(rawUserData.username);
+            if (isEmailExists == true) {
+                return {
+                    EM: "The username already exists",
+                    EC: 1
+                }
             }
-        }
-        let isUsernameExists = await checkEmail(rawUserData.email);
-        if (isUsernameExists == true) {
-            return {
-                EM: "The email already exists",
-                EC: 1
+            let isUsernameExists = await checkEmail(rawUserData.email);
+            if (isUsernameExists == true) {
+                return {
+                    EM: "The email already exists",
+                    EC: 1
+                }
             }
-        }
-        // hash user password
-        let hashPassword = await hashUserPassword(rawUserData.password);
-        // create new user
-        //const newUser = mongoose.model('User', userSchema);
-        const user = new User({
-            username: rawUserData.username,
-            email: rawUserData.email,
-            password: hashPassword,
-            role_Id: rawUserData.role_id
-        });
+            // hash user password
+            let hashPassword = await hashUserPassword(rawUserData.password);
+            // create new user
+            const user = new User({
+                username: rawUserData.username,
+                email: rawUserData.email,
+                password: hashPassword,
+                role_Id: rawUserData.role_id
+            });
 
-        try {
-            const result = await user.save();
-            console.log(result);
-            return {
-                EM: "User created successfully",
-                EC: 0
+            try {
+                const result = await user.save();
+                console.log(result);
+                return {
+                    EM: "User created successfully",
+                    EC: 0
+                }
+            } catch (err) {
+                console.error('Error creating user:', err);
             }
-        } catch (err) {
-            console.error('Error creating user:', err);
         }
+        else {
+            return {
+                EM: "email is not a email",
+                EC: 1,
+                DT: ""
+            }
+        }
+
     } catch (e) {
         console.log(">>> Error register new user (service): " + e.message);
         return {
@@ -108,7 +118,7 @@ const UserLogin = async (rawData) => {
                 DT: ""
             }
         }
-        else{
+        else {
             return {
                 EM: "user name is not a email",
                 EC: 1,
