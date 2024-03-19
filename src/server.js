@@ -5,6 +5,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { EventEmitter } = require('events');
 
+const JWT = require('./middleware/jwtAction');
+
 const app = express();
 
 // Set the view engine
@@ -21,8 +23,10 @@ configViewEngine(app);
 
 app.use(express.json());
 
-
-
+//test JWT
+JWT.createJWT();
+let verify = JWT.verifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVHJ1b25nIiwiZW1haWwiOiJraG9hdHJ1b25nQGdtYWlsLmNvbSIsImlhdCI6MTcxMDg2Mjc1N30.Ku8-XZavojjcnmXJQtcSpUlM4NLM3JqF93rIQJpA4JY");
+console.log(verify)
 // Setup routes
 const authRoute = require('./routers/auth.Router');
 const roleRoute = require('./routers/role.Router');
@@ -47,6 +51,10 @@ for (let i = 0; i < 20; i++) {
     });
 }
 
+
+app.use((req, res) => {
+    return res.send("404 Not Found");
+})
 
 //self running function
 const port = process.env.PORT || 3001;

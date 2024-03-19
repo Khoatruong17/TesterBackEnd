@@ -107,7 +107,9 @@ const UserLogin = async (rawData) => {
                     return {
                         EM: "Login successful",
                         EC: 0,
-                        DT: user
+                        DT: {
+                            access_token: ''
+                        }
                     }
                 }
             }
