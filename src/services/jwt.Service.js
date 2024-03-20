@@ -1,6 +1,39 @@
-const GetGroupWithRole = (email) => {
-    
-}
+const User = require('../models/userModel');
+const Role = require('../models/roleModel');
+const Group = require('../models/groupModel');
+const GroupRole = require('../models/grouproleModel');
+
+const GetGroupWithRole = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        const group = await Group.findById(user.group.group_id);
+        if (!group) {
+            throw new Error('Group not found');
+        }
+        const groupRoles = await GroupRole.find({ group_id: group._id });
+        if (!groupRoles || groupRoles.length === 0) {
+            throw new Error('Group roles not found');
+        }
+        const roleIds = groupRoles.map(gr => gr.role_id);
+        const roles = await Role.find({ _id: { $in: roleIds } });
+        if (!roles || roles.length === 0) {
+            throw new Error('Roles not found');
+        }
+        console.log(">>> Roles");
+        console.log(roles);
+        const sRoles = roles.map(role => ({
+            url: role.url,
+            description: role.description
+        }));
+        return {sRoles, group};
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+};
 
 module.exports = {
     GetGroupWithRole

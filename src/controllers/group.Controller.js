@@ -1,31 +1,15 @@
 const express = require("express");
 const Group = require("../models/groupModel");
 
-const checknoNumber = async (noNumberofGroup) => {
-  const IsnoNumberExists = await Group.findOne({ no_group: noNumberofGroup });
-  if (IsnoNumberExists) {
-    return true;
-  } else {
-    return false;
-  }
-};
 
 const groupController = {
   //Create group
   createGroup: async (req, res) => {
     try {
-    //   let IsnoNumberExists = await Group.findOne({no_group: req.body.no_group});
-    //   if (!IsnoNumberExists) {
-    //     return {
-    //       EM: "The no_group already exists",
-    //       EC: 1,
-    //     };
-    //   }
       // Create a new group
       const newGroup = await new Group({
-        no_group: req.body.no_group,
         group_name: req.body.group_name,
-        description: req.body.description,
+        description: req.body.description
       });
       // Save the group to the database
       const group = await newGroup.save();

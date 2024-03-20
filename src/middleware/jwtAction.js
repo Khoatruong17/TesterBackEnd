@@ -1,18 +1,26 @@
 require("dotenv").config();
 const JWT = require("jsonwebtoken");
 
-const createJWT = async () => {
-  let payload = { name: "Truong", email: "khoatruong@gmail.com" };
-  let key = process.env.JWT_SECRET;
-  let token = null;
+// const createJWT = async (payload) => {
+//   let key = process.env.JWT_SECRET;
+//   let token = null;
+//   try {
+//     token = JWT.sign(payload, key);
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   return token;
+// };
+
+const createJWT = async (payload) => {
   try {
-    token = JWT.sign(payload, key);
-    console.log(token);
-    return token;
+      let key = process.env.JWT_SECRET;
+      let token = JWT.sign(payload, key);
+      return token;
   } catch (error) {
-    console.log(error);
+      console.log(error);
+      throw new Error('Error creating JWT');
   }
-  return token;
 };
 
 const verifyToken = (token) => {

@@ -1,9 +1,5 @@
 const mongoose = require('mongoose')
 const GroupSchema = new mongoose.Schema({
-    no_group:{
-        type: Number,
-        required: true
-    },
     group_name: {
         type: String,
         minLength: 1,

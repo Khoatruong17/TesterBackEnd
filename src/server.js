@@ -26,12 +26,14 @@ app.use(express.json());
 // Setup routes
 const authRoute = require('./routers/auth.Router');
 const groupRoute = require('./routers/group.Router');
+const roleRoute = require('./routers/role.Router');
 const facultyRoute = require('./routers/faculty.Router');
 const userRoute = require('./routers/user.Router');
 
 //Router
 app.use("/v1", authRoute);
 app.use("/v1", groupRoute);
+app.use("/v1", roleRoute);
 app.use("/v1", facultyRoute);
 app.use("/v1", userRoute);
 

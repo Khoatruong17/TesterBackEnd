@@ -13,7 +13,15 @@
 * Delete Group ---->  DELETE http://localhost:8081/v1/group/(id)
 * Update Group ----> PUT http://localhost:8081/v1/group/(id)
 *
-* Faculty: 
+
+
+Role:
+* Add Role ----> POST http://localhost:8081/v1/role
+
+Group with Role:
+* Add ----> POST http://localhost:8081/v1/
+
+Faculty: 
 * Get ALL Faculty ----> GET http://localhost:8081/v1/faculty 
 * Add Faculty  ----> POST http://localhost:8081/v1/faculty 
 * Delete Faculty ---->  DELETE http://localhost:8081/v1/faculty/(id)

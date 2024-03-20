@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
+require("dotenv").config();
 const User = require("../models/userModel");
 const GroupModel = require("../models/groupModel");
 const bcrypt = require("bcrypt");
+const getGWR = require("../services/jwt.Service");
+const JWTaction = require("../middleware/jwtAction");
 
 //---------------- Register ------------------
 const hashUserPassword = async (password) => {
@@ -53,11 +56,11 @@ const registerNewUser = async (rawUserData) => {
             // hash user password
             let hashPassword = await hashUserPassword(rawUserData.password);
             // find roles by id
-            const find_group = await GroupModel.findById(rawUserData.role_id).populate('_id');
+            const find_group = await GroupModel.findById(rawUserData.group_id).populate('_id');
             console.log(find_group);
             if (!find_group){
                 return {
-                    EM: "Cannot find role",
+                    EM: "Cannot find group",
                     EC: 1
                 }
             }
@@ -110,16 +113,21 @@ const UserLogin = async (rawData) => {
         const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(rawData.email)
         if (isEmail) {
             let user = await User.findOne({ email: rawData.email });
-            console.log(user);
             if (user) {
-                console.log('>>>>>>>User found', user.password);
                 let IsCorrectPass = checkPassword(rawData.password, user.password);
                 if (IsCorrectPass === true) {
+                    //test token
+                    let groupWithRole = await getGWR.GetGroupWithRole(user);
+                    let tokenJWT = await JWTaction.createJWT({email: user.email})
+                    console.log('>>> token', tokenJWT);
                     return {
                         EM: "Login successful",
                         EC: 0,
                         DT: {
-                            access_token: ''
+                            access_token: tokenJWT,
+                            expiresIn: process.env.JWT_EXPIRES_IN,
+                            data: groupWithRole
+                            
                         }
                     }
                 }

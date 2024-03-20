@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 const GroupRoleSchema = new mongoose.Schema({
-    no_group:{
-        type: mongoose.Schema.Types.Number,
+    group_id:{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'group'
     },
-    no_role:{
-        type: mongoose.Schema.Types.Number,
+    role_id:{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'role'
     }
 }, {timestamps: true}

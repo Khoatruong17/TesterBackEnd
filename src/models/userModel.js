@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     group: {
         group_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'roles'
+            ref: 'group',
         },
         group_name: {
             type: String,
