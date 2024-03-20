@@ -26,9 +26,14 @@ const userSchema = new mongoose.Schema({
             type: String,
         }
     },
-    faculty_Id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'faculties' 
+    faculty: {
+        faculty_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'faculties'
+        },
+        faculty_name: {
+            type: String,
+        }
     }
 }, {timestamps: true}
 )
