@@ -18,7 +18,6 @@ const createJWT = async () => {
 const verifyToken = (token) => {
   let key = process.env.JWT_SECRET;
   let data = null;
-
   try {
     let decoded = JWT.verify(token, key);
     data = decoded;

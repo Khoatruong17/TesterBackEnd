@@ -5,7 +5,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const { EventEmitter } = require('events');
 
-const JWT = require('./middleware/jwtAction');
 
 const app = express();
 
@@ -23,19 +22,16 @@ configViewEngine(app);
 
 app.use(express.json());
 
-//test JWT
-JWT.createJWT();
-let verify = JWT.verifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVHJ1b25nIiwiZW1haWwiOiJraG9hdHJ1b25nQGdtYWlsLmNvbSIsImlhdCI6MTcxMDg2Mjc1N30.Ku8-XZavojjcnmXJQtcSpUlM4NLM3JqF93rIQJpA4JY");
-console.log(verify)
+
 // Setup routes
 const authRoute = require('./routers/auth.Router');
-const roleRoute = require('./routers/role.Router');
+const groupRoute = require('./routers/group.Router');
 const facultyRoute = require('./routers/faculty.Router');
 const userRoute = require('./routers/user.Router');
 
 //Router
 app.use("/v1", authRoute);
-app.use("/v1", roleRoute);
+app.use("/v1", groupRoute);
 app.use("/v1", facultyRoute);
 app.use("/v1", userRoute);
 

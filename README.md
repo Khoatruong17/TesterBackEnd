@@ -7,11 +7,11 @@
 * Register ----> POST  http://localhost:8081/v1/register
 * Get All Users ----> GET http://localhost:8081/v1/users
 * 
-* Role: 
-* Get ALL Role ----> GET http://localhost:8081/v1/role 
-* Add Role  ----> POST http://localhost:8081/v1/role 
-* Delete Role ---->  DELETE http://localhost:8081/v1/role/(id)
-* Update Role ----> PUT http://localhost:8081/v1/role/(id)
+* Group: 
+* Get ALL Group ----> GET http://localhost:8081/v1/group
+* Add Group  ----> POST http://localhost:8081/v1/group 
+* Delete Group ---->  DELETE http://localhost:8081/v1/group/(id)
+* Update Group ----> PUT http://localhost:8081/v1/group/(id)
 *
 * Faculty: 
 * Get ALL Faculty ----> GET http://localhost:8081/v1/faculty 

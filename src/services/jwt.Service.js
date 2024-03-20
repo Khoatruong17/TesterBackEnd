@@ -1,5 +1,5 @@
 const GetGroupWithRole = (email) => {
-
+    
 }
 
 module.exports = {

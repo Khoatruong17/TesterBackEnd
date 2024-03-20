@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const User = require("../models/userModel");
-const RoleModel = require("../models/roleModel");
+const GroupModel = require("../models/groupModel");
 const bcrypt = require("bcrypt");
 
 //---------------- Register ------------------
@@ -52,12 +52,24 @@ const registerNewUser = async (rawUserData) => {
             }
             // hash user password
             let hashPassword = await hashUserPassword(rawUserData.password);
+            // find roles by id
+            const find_group = await GroupModel.findById(rawUserData.role_id).populate('_id');
+            console.log(find_group);
+            if (!find_group){
+                return {
+                    EM: "Cannot find role",
+                    EC: 1
+                }
+            }
             // create new user
             const user = new User({
                 username: rawUserData.username,
                 email: rawUserData.email,
                 password: hashPassword,
-                role_Id: rawUserData.role_id
+                group: {
+                    group_id: find_group._id,
+                    group_name: find_group.group_name
+                }
             });
 
             try {
@@ -78,7 +90,6 @@ const registerNewUser = async (rawUserData) => {
                 DT: ""
             }
         }
-
     } catch (e) {
         console.log(">>> Error register new user (service): " + e.message);
         return {

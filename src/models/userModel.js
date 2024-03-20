@@ -17,9 +17,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
-    role_Id:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'roles' 
+    group: {
+        group_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'roles'
+        },
+        group_name: {
+            type: String,
+        }
     },
     faculty_Id:{
         type: mongoose.Schema.Types.ObjectId,

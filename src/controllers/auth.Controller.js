@@ -3,7 +3,6 @@
 const registerLoginService = require("../services/registerLogin.Service");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
-const RoleModel = require("../models/roleModel");
 
 const Login = async (req, res) => {
   try {
