@@ -1,13 +1,11 @@
 const mongoose = require('mongoose')
-const GroupSchema = new mongoose.Schema({
-    no_group:{
+const RoleSchema = new mongoose.Schema({
+    no_role:{
         type: Number,
         required: true
     },
-    group_name: {
+    url: {
         type: String,
-        minLength: 1,
-        maxLength: 50,
         required: true,
         unique: true 
     },
@@ -17,4 +15,4 @@ const GroupSchema = new mongoose.Schema({
 }, {timestamps: true}
 )
 
-module.exports = mongoose.model('group', GroupSchema)
+module.exports = mongoose.model('role', RoleSchema)
