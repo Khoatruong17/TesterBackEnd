@@ -13,11 +13,15 @@ const GetGroupWithRole = async (userId) => {
         if (!group) {
             throw new Error('Group not found');
         }
+        console.log(group)
+
         const groupRoles = await GroupRole.find({ group_id: group._id });
-        if (!groupRoles || groupRoles.length === 0) {
-            throw new Error('Group roles not found');
+        if (!groupRoles) {
+             console.log(groupRoles);
+             throw new Error('Group roles not found or not created connection');
         }
-        const roleIds = groupRoles.map(gr => gr.role_id);
+        console.log(groupRoles);
+        const roleIds = groupRoles.map(r => r.role_id);
         const roles = await Role.find({ _id: { $in: roleIds } });
         if (!roles || roles.length === 0) {
             throw new Error('Roles not found');

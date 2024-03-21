@@ -116,7 +116,7 @@ const UserLogin = async (rawData) => {
             if (user) {
                 let IsCorrectPass = checkPassword(rawData.password, user.password);
                 if (IsCorrectPass === true) {
-                    //test token
+                    //token
                     let groupWithRole = await getGWR.GetGroupWithRole(user);
                     let tokenJWT = await JWTaction.createJWT({email: user.email})
                     console.log('>>> token', tokenJWT);
@@ -127,7 +127,6 @@ const UserLogin = async (rawData) => {
                             access_token: tokenJWT,
                             expiresIn: process.env.JWT_EXPIRES_IN,
                             data: groupWithRole
-                            
                         }
                     }
                 }
@@ -147,7 +146,7 @@ const UserLogin = async (rawData) => {
             }
         }
     } catch (e) {
-        console.log(">>> Error register new user (service): " + e.message);
+        console.log(">>> Error login user (service): " + e.message);
         return {
             EM: "Something Wrong with server",
             EC: 10
