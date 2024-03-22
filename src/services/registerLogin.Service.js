@@ -126,7 +126,7 @@ const UserLogin = async (rawData) => {
                         DT: {
                             access_token: tokenJWT,
                             expiresIn: process.env.JWT_EXPIRES_IN,
-                            data: groupWithRole
+                            data: {username: user.username, groupWithRole}
                         }
                     }
                 }
