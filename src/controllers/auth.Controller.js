@@ -9,7 +9,7 @@ const Login = async (req, res) => {
     let data = await registerLoginService.UserLogin(req.body);
     //set cookie
     res.cookie("jwt", data.DT.access_token, {
-      maxAge: 900000, // set time for cookie
+      maxAge: 60 * 60 * 1000, // set time for cookie
       httpOnly: true, // only use from server
     });
     return res.status(200).json({
