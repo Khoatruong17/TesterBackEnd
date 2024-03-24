@@ -5,7 +5,7 @@ const groupController = require("../controllers/group.Controller");
 const roleController = require("../controllers/role.Controller");
 const connectGR = require("../controllers/grouprole.Controller");
 const userController = require("../controllers/user.Controller");
-const checkUserJWT = require("../middleware/jwtAction");
+const checkUser = require("../middleware/jwtAction");
 // checkUserLogin
 // const checkUserLogin = (req, res, next) => {
 //   const nonSecurePaths = ["/", "/login", "/register"];
@@ -29,7 +29,12 @@ const initApiRouter = (app) => {
   routerAPI.post("/login", authController.Login);
 
   // User routes
-  routerAPI.get("/users", checkUserJWT.checkUserJWT, userController.getAllUser);
+  routerAPI.get(
+    "/users",
+    checkUser.checkUserJWT,
+    checkUser.checkUserPermission,
+    userController.getAllUser
+  );
 
   // faculty router
   routerAPI.post("/faculty", facultyController.createFaculty);
