@@ -7,6 +7,11 @@ const User = require("../models/userModel");
 const Login = async (req, res) => {
   try {
     let data = await registerLoginService.UserLogin(req.body);
+    //set cookie
+    res.cookie("jwt", data.DT.access_token, {
+      maxAge: 900000, // set time for cookie
+      httpOnly: true, // only use from server
+    });
     return res.status(200).json({
       EM: data.EM, //create user success message
       EC: data.EC,

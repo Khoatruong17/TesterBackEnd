@@ -2,23 +2,32 @@ const express = require("express");
 const Role = require("../models/roleModel");
 
 const createRole = async (req, res) => {
-    try {
-      // Create a new role
-      const newRole = await new Role({
-        url: req.body.url,
-        description: req.body.description
-      });
-      // Save the role to the database
-      const role = await newRole.save();
-      console.log("Add role successfully");
-      res.status(200).json(role);
-    } catch (error) {
-      console.log("Error create role (controller): " + error);
-      res.status(500).json({ error: error.message });
-    }
-}
+  try {
+    // Create a new role
+    const newRole = await new Role({
+      url: req.body.url,
+      description: req.body.description,
+    });
+    // Save the role to the database
+    const role = await newRole.save();
+    console.log("Add role successfully");
+    res.status(200).json(role);
+  } catch (error) {
+    console.log("Error create role (controller): " + error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
-
+const getAllGroup = async (req, res) => {
+  try {
+    const group = await Role.find();
+    res.status(200).json(group);
+    console.log("Get all groups successfully");
+  } catch (error) {
+    console.log("Error get all groups: " + error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // const groupController = {
 
@@ -99,5 +108,6 @@ const createRole = async (req, res) => {
 // };
 
 module.exports = {
-  createRole
+  createRole,
+  getAllGroup,
 };
