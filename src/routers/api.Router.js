@@ -5,6 +5,23 @@ const groupController = require("../controllers/group.Controller");
 const roleController = require("../controllers/role.Controller");
 const connectGR = require("../controllers/grouprole.Controller");
 const userController = require("../controllers/user.Controller");
+const checkUserJWT = require("../middleware/jwtAction");
+// checkUserLogin
+// const checkUserLogin = (req, res, next) => {
+//   const nonSecurePaths = ["/", "/login", "/register"];
+//   if (nonSecurePaths.includes(req.path)) return next();
+
+//   // authenticate user
+//   if (user) {
+//     next();
+//   } else {
+//     return res.status(401).json({
+//       EM: "Unauthorized",
+//       EC: 401,
+//       DT: null,
+//     });
+//   }
+// };
 
 const initApiRouter = (app) => {
   // Register
@@ -12,7 +29,7 @@ const initApiRouter = (app) => {
   routerAPI.post("/login", authController.Login);
 
   // User routes
-  routerAPI.get("/users", userController.getAllUser);
+  routerAPI.get("/users", checkUserJWT.checkUserJWT, userController.getAllUser);
 
   // faculty router
   routerAPI.post("/faculty", facultyController.createFaculty);

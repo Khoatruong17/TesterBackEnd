@@ -1,8 +1,6 @@
 //import {userService} from '../services/userService'
 
 const registerLoginService = require("../services/registerLogin.Service");
-const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
 
 const Login = async (req, res) => {
   try {
