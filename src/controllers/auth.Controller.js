@@ -10,6 +10,7 @@ const Login = async (req, res) => {
       maxAge: 60 * 60 * 1000, // set time for cookie
       httpOnly: true, // only use from server
     });
+    console.log(">>> Token: ", data.DT.access_token);
     return res.status(200).json({
       EM: data.EM, //create user success message
       EC: data.EC,

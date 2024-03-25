@@ -24,7 +24,7 @@ const GetGroupWithRole = async (userId) => {
     const roleIds = groupRoles.map((r) => r.role_id);
     const roles = await Role.find({ _id: { $in: roleIds } });
     if (!roles || roles.length === 0) {
-      throw new Error("Roles not found");
+      throw new Error("Roles not found or not created connection");
     }
     console.log(">>> Roles");
     console.log(roles);
