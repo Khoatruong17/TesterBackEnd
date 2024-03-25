@@ -1,7 +1,7 @@
 require("dotenv").config();
 const JWT = require("jsonwebtoken");
 
-const nonSecurePaths = ["/login", "/register"];
+const nonSecurePaths = ["/login", "/register", "/group"];
 
 const createJWT = async (payload) => {
   try {

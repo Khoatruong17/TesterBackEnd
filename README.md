@@ -8,7 +8,7 @@
 -
 - Group:
 - Get ALL Group ----> GET http://localhost:8081/v1/group
-- Add Group ----> POST http://localhost:8081/v1/group
+- Add Group ----> POST http://localhost:8081/v1//group/create
 - Delete Group ----> DELETE http://localhost:8081/v1/group/(id)
 - Update Group ----> PUT http://localhost:8081/v1/group/(id)
 -

@@ -24,7 +24,7 @@ const initApiRouter = (app) => {
   routerAPI.put("/faculty/:id", facultyController.updateFaculty);
 
   // group router
-  routerAPI.post("/group", groupController.createGroup);
+  routerAPI.post("/group/create", groupController.createGroup);
   routerAPI.get("/group", groupController.getAllGroup);
   routerAPI.delete("/group/:id", groupController.deleteGroup);
   routerAPI.put("/group/:id", groupController.updateGroup);
