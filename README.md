@@ -6,6 +6,7 @@
 - Register ----> POST http://localhost:8081/v1/register
 - Get All Users ----> GET http://localhost:8081/v1/user/read
 -
+
 - Group:
 - Get ALL Group ----> GET http://localhost:8081/v1/group
 - Add Group ----> POST http://localhost:8081/v1/group/create

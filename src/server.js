@@ -5,6 +5,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const { EventEmitter } = require("events");
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
 const app = express();
 
@@ -21,9 +22,12 @@ app.use(bodyParser.json());
 configViewEngine(app);
 
 app.use(express.json());
-
 //Config Cookie Parser
 app.use(cookieParser());
+
+// Config file to upload
+// Default config
+app.use(fileUpload());
 
 // Setup routes
 // const authRoute = require('./routers/auth.Router');
