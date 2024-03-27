@@ -1,17 +1,30 @@
-const uploadSingleFile = (file) => {
-  let uploadPath =
-    __dirname + "/somewhere/on/your/server/upload/" + sampleFile.name;
+const path = require("path");
 
-  file.mv(uploadPath, (err) => {
-    if (err) {
-      console.log(err);
-      return {
-        EM: "File upload failed",
-        EC: 1,
-      };
-    }
-    console.log("File uploaded to" + uploadPath);
-  });
+const uploadSingleFile = async (file) => {
+  let uploadPath = path.resolve(__dirname, "../public/images/upload");
+
+  let extName = path.extname(file.name);
+  let basename = path.basename(file.name, extName);
+
+  let finalName = `${basename} - ${Date.now()}${extName}`;
+  let finalPath = `${uploadPath}/${finalName}`;
+
+  try {
+    await file.mv(finalPath);
+    return {
+      EM: "File uploaded successfully",
+      EC: 0,
+      DT: {
+        path: finalName,
+      },
+    };
+  } catch (error) {
+    console.log(">> Check error (service): " + error);
+    return {
+      EM: "File upload failed",
+      EC: 1,
+    };
+  }
 };
 
 const uploadMultipleFiles = () => {};

@@ -6,9 +6,10 @@ const roleController = require("../controllers/role.Controller");
 const connectGR = require("../controllers/grouprole.Controller");
 const userController = require("../controllers/user.Controller");
 const checkUser = require("../middleware/jwtAction");
+const upFile = require("../controllers/file.Controller");
 
 const initApiRouter = (app) => {
-  routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
+  //routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
 
   // Register
   routerAPI.post("/register", authController.Register);
@@ -37,6 +38,10 @@ const initApiRouter = (app) => {
 
   // group role router
   routerAPI.post("/grouprole", connectGR.createCGR); // add group role connection
+
+  //api upload file
+  routerAPI.post("/file/single", upFile.postUploadSingleFile); // up single file to server
+  routerAPI.post("/file/single", upFile.postUploadMultipleFiles); // up multiple file to server
 
   return app.use("/v1/", routerAPI);
 };
