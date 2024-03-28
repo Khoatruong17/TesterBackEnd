@@ -12,7 +12,7 @@ const checkUser = require("../middleware/jwtAction");
 const upFile = require("../controllers/file.Controller");
 
 const initApiRouter = (app) => {
-  //routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
+  // routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
   // routerAPI.all("*",);
 
   // Register
@@ -44,20 +44,20 @@ const initApiRouter = (app) => {
   routerAPI.put("/document/:id", documentController.updateDocument);
 
   // faculty router
-  routerAPI.post("/faculty", facultyController.createFaculty);
+  routerAPI.post("/faculty/create", facultyController.createFaculty);
   routerAPI.get("/faculty", facultyController.getAllFaculty);
-  routerAPI.delete("/faculty/:id", facultyController.deleteFaculty);
-  routerAPI.put("/faculty/:id", facultyController.updateFaculty);
+  routerAPI.delete("/faculty/delete/:id", facultyController.deleteFaculty);
+  routerAPI.put("/faculty/update/:id", facultyController.updateFaculty);
 
   // group router
   routerAPI.post("/group/create", groupController.createGroup);
   routerAPI.get("/group", groupController.getAllGroup);
-  routerAPI.delete("/group/:id", groupController.deleteGroup);
-  routerAPI.put("/group/:id", groupController.updateGroup);
+  routerAPI.delete("/group/delete/:id", groupController.deleteGroup);
+  routerAPI.put("/group/edit/:id", groupController.updateGroup);
 
   // role router
   routerAPI.post("/role", roleController.createRole);
-  routerAPI.get("/role", roleController.getAllGroup);
+  routerAPI.get("/role/read", roleController.getAllGroup);
   //routerAPI.delete("/group/:id", groupController.deleteGroup);
   //routerAPI.put("/group/:id", groupController.updateGroup);
 
