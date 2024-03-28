@@ -1,5 +1,8 @@
 const routerAPI = require("express").Router();
 const authController = require("../controllers/auth.Controller");
+const commentController = require("../controllers/comment.Controller");
+const contributionController = require("../controllers/contribution.Controller");
+const documentController = require("../controllers/document.Controller");
 const facultyController = require("../controllers/faculty.Controller");
 const groupController = require("../controllers/group.Controller");
 const roleController = require("../controllers/role.Controller");
@@ -9,7 +12,8 @@ const checkUser = require("../middleware/jwtAction");
 const upFile = require("../controllers/file.Controller");
 
 const initApiRouter = (app) => {
-  //routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
+  routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
+  // routerAPI.all("*",);
 
   // Register
   routerAPI.post("/register", authController.Register);
@@ -17,6 +21,27 @@ const initApiRouter = (app) => {
 
   // User routes
   routerAPI.get("/user/read", userController.getAllUser);
+
+  // comment router
+  routerAPI.post("/comment", commentController.createComment);
+  routerAPI.get("/comment", commentController.getAllComment);
+  routerAPI.delete("/comment/:id", commentController.deleteComment);
+  routerAPI.put("/comment/:id", commentController.updateComment);
+
+  // contribution router
+  routerAPI.post("/contribution", contributionController.createContribution);
+  routerAPI.get("/contribution", contributionController.getAllContribution);
+  routerAPI.delete(
+    "/contribution/:id",
+    contributionController.deleteContribution
+  );
+  routerAPI.put("/contribution/:id", contributionController.updateContribution);
+
+  // document router
+  routerAPI.post("/document", documentController.createDocument);
+  routerAPI.get("/document", documentController.getAllDocument);
+  routerAPI.delete("/document/:id", documentController.deleteDocument);
+  routerAPI.put("/document/:id", documentController.updateDocument);
 
   // faculty router
   routerAPI.post("/faculty", facultyController.createFaculty);
@@ -44,6 +69,7 @@ const initApiRouter = (app) => {
   routerAPI.post("/file/single", upFile.postUploadMultipleFiles); // up multiple file to server
 
   return app.use("/v1/", routerAPI);
+  // return app.use("/", routerAPI);
 };
 
 module.exports = initApiRouter;
