@@ -9,6 +9,7 @@ const roleController = require("../controllers/role.Controller");
 const connectGR = require("../controllers/grouprole.Controller");
 const userController = require("../controllers/user.Controller");
 const checkUser = require("../middleware/jwtAction");
+const topicController = require("../controllers/topic.Controller");
 const upFile = require("../controllers/file.Controller");
 
 const initApiRouter = (app) => {
@@ -60,6 +61,12 @@ const initApiRouter = (app) => {
   routerAPI.get("/role/read", roleController.getAllGroup);
   //routerAPI.delete("/group/:id", groupController.deleteGroup);
   //routerAPI.put("/group/:id", groupController.updateGroup);
+
+  // topic router
+  routerAPI.post("/topic/create", topicController.createTopic);
+  routerAPI.get("/topic/read", topicController.getAllTopic);
+  // routerAPI.delete("/topic/:id", topic.deleteTopic);
+  // routerAPI.put("/topic/:id", topic.updateTopic);
 
   // group role router
   routerAPI.post("/grouprole", connectGR.createCGR); // add group role connection

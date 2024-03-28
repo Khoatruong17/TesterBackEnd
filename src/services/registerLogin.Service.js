@@ -120,6 +120,7 @@ const UserLogin = async (rawData) => {
           //token
           let groupWithRole = await getGWR.GetGroupWithRole(user);
           let tokenJWT = await JWTaction.createJWT({
+            id: user._id,
             email: user.email,
             groupWithRole,
           });
@@ -130,7 +131,7 @@ const UserLogin = async (rawData) => {
             DT: {
               access_token: tokenJWT,
               expiresIn: process.env.JWT_EXPIRES_IN,
-              data: { username: user.username, groupWithRole },
+              data: { id: user._id, username: user.username, groupWithRole },
             },
           };
         }
