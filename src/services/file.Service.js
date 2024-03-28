@@ -1,6 +1,12 @@
 const path = require("path");
 
 const uploadSingleFile = async (file) => {
+  if (!file || typeof file.name !== "string") {
+    return {
+      EM: "File information missing or invalid",
+      EC: 1,
+    };
+  }
   let uploadPath = path.resolve(__dirname, "../public/images/upload");
 
   let extName = path.extname(file.name);
@@ -19,15 +25,57 @@ const uploadSingleFile = async (file) => {
       },
     };
   } catch (error) {
-    console.log(">> Check error (service): " + error);
+    console.log(">> Check error (service single): " + error);
+    return {
+      EM: "File upload failed ",
+      EC: 1,
+    };
+  }
+};
+
+const uploadMultipleFiles = async (files) => {
+  try {
+    let uploadPath = path.resolve(__dirname, "../public/images/upload");
+    let resultArr = [];
+    let countSuccess = 0;
+    for (let i = 0; i < files.length; i++) {
+      let extname = path.extname(files[i].name);
+      let basename = path.basename(files[i].name, extname);
+
+      let finalName = `${basename} - ${Date.now()}${extname}`;
+      let finalPath = `${uploadPath}/${finalName}`;
+
+      try {
+        await files[i].mv(finalPath);
+        resultArr.push({
+          status: "success",
+          path: finalName,
+          fileName: files[i].name,
+          error: null,
+        });
+        countSuccess++;
+      } catch (error) {
+        resultArr.push({
+          status: "failed",
+          path: null,
+          fileName: files[i].name,
+          error: JSON.stringify(error),
+        });
+      }
+    }
+
+    return {
+      countSuccess: countSuccess,
+      detail: resultArr,
+    };
+  } catch (error) {
+    console.log(">> Check error (service multiple): " + error);
     return {
       EM: "File upload failed",
       EC: 1,
     };
   }
 };
-
-const uploadMultipleFiles = () => {};
 
 module.exports = {
   uploadSingleFile,

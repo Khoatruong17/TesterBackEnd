@@ -12,7 +12,7 @@ const checkUser = require("../middleware/jwtAction");
 const upFile = require("../controllers/file.Controller");
 
 const initApiRouter = (app) => {
-  routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
+  //routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
   // routerAPI.all("*",);
 
   // Register
@@ -66,7 +66,7 @@ const initApiRouter = (app) => {
 
   //api upload file
   routerAPI.post("/file/single", upFile.postUploadSingleFile); // up single file to server
-  routerAPI.post("/file/single", upFile.postUploadMultipleFiles); // up multiple file to server
+  routerAPI.post("/file/multiple", upFile.postUploadMultipleFiles); // up multiple file to server
 
   return app.use("/v1/", routerAPI);
   // return app.use("/", routerAPI);
