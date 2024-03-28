@@ -21,7 +21,7 @@ const uploadSingleFile = async (file) => {
       EM: "File uploaded successfully",
       EC: 0,
       DT: {
-        path: finalName,
+        path: finalPath,
       },
     };
   } catch (error) {
@@ -33,24 +33,24 @@ const uploadSingleFile = async (file) => {
   }
 };
 
-const uploadMultipleFiles = async (files) => {
+const uploadMultipleFiles = async (file) => {
   try {
     let uploadPath = path.resolve(__dirname, "../public/images/upload");
     let resultArr = [];
     let countSuccess = 0;
-    for (let i = 0; i < files.length; i++) {
-      let extname = path.extname(files[i].name);
-      let basename = path.basename(files[i].name, extname);
+    for (let i = 0; i < file.length; i++) {
+      let extname = path.extname(file[i].name);
+      let basename = path.basename(file[i].name, extname);
 
       let finalName = `${basename} - ${Date.now()}${extname}`;
       let finalPath = `${uploadPath}/${finalName}`;
 
       try {
-        await files[i].mv(finalPath);
+        await file[i].mv(finalPath);
         resultArr.push({
           status: "success",
           path: finalName,
-          fileName: files[i].name,
+          fileName: file[i].name,
           error: null,
         });
         countSuccess++;
@@ -58,7 +58,7 @@ const uploadMultipleFiles = async (files) => {
         resultArr.push({
           status: "failed",
           path: null,
-          fileName: files[i].name,
+          fileName: file[i].name,
           error: JSON.stringify(error),
         });
       }
