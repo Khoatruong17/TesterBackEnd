@@ -34,6 +34,10 @@ Upload files(chua dung duoc dau)
 - Upload Single File ----> POST http://localhost:8081/v1/file/single
 - Upload Multiple File ----> POST http://localhost:8081/v1/file/multiple
 
+sendMail
+
+- Send Email ----> POST http://localhost:8081/v1/sendmail
+
 Topic:
 
 - Create new topic ----> POST http://localhost:8081/v1/topic/create
