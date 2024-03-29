@@ -31,13 +31,19 @@ const initApiRouter = (app) => {
   routerAPI.put("/comment/:id", commentController.updateComment);
 
   // contribution router
-  routerAPI.post("/contribution", contributionController.createContribution);
-  routerAPI.get("/contribution", contributionController.getAllContribution);
-  routerAPI.delete(
-    "/contribution/:id",
-    contributionController.deleteContribution
+  routerAPI.post(
+    "/contribution/create",
+    contributionController.createContribution
   );
-  routerAPI.put("/contribution/:id", contributionController.updateContribution);
+  routerAPI.get(
+    "/contribution/read",
+    contributionController.getAllContribution
+  );
+  // routerAPI.delete(
+  //   "/contribution/:id",
+  //   contributionController.deleteContribution
+  // );
+  // routerAPI.put("/contribution/:id", contributionController.updateContribution);
 
   // document router
   routerAPI.post("/document", documentController.createDocument);

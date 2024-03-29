@@ -49,7 +49,7 @@ const uploadMultipleFiles = async (file) => {
         await file[i].mv(finalPath);
         resultArr.push({
           status: "success",
-          path: finalName,
+          path: finalPath,
           fileName: file[i].name,
           error: null,
         });

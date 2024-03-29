@@ -43,7 +43,7 @@ const checkUserJWT = (req, res, next) => {
     }
   } else {
     return res.status(401).json({
-      EM: "unauthorized",
+      EM: "Not found cookie",
       EC: "-1",
       DT: "",
     });

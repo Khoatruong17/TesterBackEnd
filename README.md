@@ -3,9 +3,17 @@
 
 User:
 
-- Login ----> POST http://localhost:8081/v1/login
-- Register ----> POST http://localhost:8081/v1/register
-- Get All Users ----> GET http://localhost:8081/v1/user/read
+- Login ---------> POST http://localhost:8081/v1/login
+- Register ---------> POST http://localhost:8081/v1/register
+- Get All Users ---------> GET http://localhost:8081/v1/user/read
+
+Contributions:
+
+- Create new contribution ------> POST http://localhost:8081/v1/contribution/create
+
+* requirements: topic_id, name, description, file in body
+
+- Get All Contributors -------> GET http://localhost:8081/v1/contribution/read
 
 Group:
 
@@ -29,10 +37,10 @@ Group with Role:
 
 - Add ----> POST http://localhost:8081/v1/grouprole
 
-Upload files(chua dung duoc dau)
+Upload files
 
-- Upload Single File ----> POST http://localhost:8081/v1/file/single
-- Upload Multiple File ----> POST http://localhost:8081/v1/file/multiple
+- Upload Single File ----> POST http://localhost:8081/v1/file/single (ko dung)
+- Upload Multiple File ----> POST http://localhost:8081/v1/file/multiple (ko dung)
 
 sendMail
 
