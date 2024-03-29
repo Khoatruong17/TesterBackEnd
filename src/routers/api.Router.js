@@ -11,6 +11,7 @@ const userController = require("../controllers/user.Controller");
 const checkUser = require("../middleware/jwtAction");
 const topicController = require("../controllers/topic.Controller");
 const upFile = require("../controllers/file.Controller");
+const sendEmail = require("../controllers/sendEmail.Controller");
 
 const initApiRouter = (app) => {
   // routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
@@ -74,7 +75,8 @@ const initApiRouter = (app) => {
   //api upload file
   routerAPI.post("/file/single", upFile.postUploadSingleFile); // up single file to server
   routerAPI.post("/file/multiple", upFile.postUploadMultipleFiles); // up multiple file to server
-
+  // send Email
+  routerAPI.post("/sendmail", sendEmail.sendMail); // send Email
   return app.use("/v1/", routerAPI);
   // return app.use("/", routerAPI);
 };
