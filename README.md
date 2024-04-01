@@ -54,3 +54,8 @@ Topic:
 Contributions:
 
 -
+comment:
+- Get ALL Comment ----> GET http://localhost:8081/v1/comment
+- Add Comment ----> POST http://localhost:8081/v1/comment
+- Delete Comment ----> DELETE http://localhost:8081/v1/comment/delete/(id)
+- Update Comment ----> PUT http://localhost:8081/v1/comment/upadte/(id)
