@@ -58,7 +58,7 @@ comment:
 - Delete Comment ----> DELETE http://localhost:8081/v1/comment/delete/(id)
 - Update Comment ----> PUT http://localhost:8081/v1/comment/upadte/(id)
 
-- document:
+document:
 - Get ALL document ----> GET http://localhost:8081/v1/document
 - Add document ----> POST http://localhost:8081/v1/document/create
 - Delete document ----> DELETE http://localhost:8081/v1/document/delete/(id)
