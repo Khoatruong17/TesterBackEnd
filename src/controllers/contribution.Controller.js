@@ -79,6 +79,7 @@ const createContribution = async (req, res) => {
     const newContribution = new Contributions({
       user_id: student_id,
       topic_id: topic_id,
+      topic_name: topic.name,
       name: req.body.name,
       description: req.body.description,
       document: documents,
@@ -106,6 +107,7 @@ const createContribution = async (req, res) => {
 const getAllContribution = async (req, res) => {
   try {
     const contribution = await Contributions.find();
+
     res.status(200).json(contribution);
     console.log("Get all contributions successfully");
   } catch (error) {

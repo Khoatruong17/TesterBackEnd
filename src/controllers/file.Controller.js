@@ -1,18 +1,23 @@
 const uploadFile = require("../services/file.Service");
 const mime = require("mime-types");
 
+let allowedMimeTypes = [
+  "image/jpeg",
+  "image/png",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/pdf",
+];
+
 const postUploadSingleFile = async (req, res) => {
   if (!req.files || Object.keys(req.files.file).length === 0) {
     return res.status(400).send("No files were uploaded.");
   }
   let mimeType = mime.lookup(req.files.file.name);
-  if (
-    mimeType !== "application/msword" &&
-    mimeType !==
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-  ) {
+
+  if (!allowedMimeTypes.includes(mimeType)) {
     throw new Error(
-      "Only Word file are allowed. Please check your file(1 file)"
+      "Only image, Word, and PDF files are allowed. Please check your file(s) (single)."
     );
   }
   let result = await uploadFile.uploadSingleFile(req.files.file);
@@ -28,14 +33,11 @@ const postUploadMultipleFiles = async (req, res) => {
   }
   if (Array.isArray(req.files.file)) {
     for (const file of req.files.file) {
-      let mimeType = mime.lookup(file.name);
-      if (
-        mimeType !== "application/msword" &&
-        mimeType !==
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      ) {
+      let mimeType = mime.lookup(req.files.file.name);
+
+      if (!allowedMimeTypes.includes(mimeType)) {
         throw new Error(
-          "Only Word files are allowed. Please check your files (multiple file)"
+          "Only image, Word, and PDF files are allowed. Please check your file(s) (multiple)."
         );
       }
     }
