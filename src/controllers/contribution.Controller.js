@@ -47,7 +47,7 @@ const createContribution = async (req, res) => {
       return res.status(400).send("No files were uploaded.");
     }
     const cookies =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZmI4ZWU0YmJjNGExODVkMmI3ZTUyMyIsImVtYWlsIjoibmFtYW5oQGdtYWlsLmNvbSIsImdyb3VwV2l0aFJvbGUiOnsic1JvbGVzIjpbeyJ1cmwiOiIvdXNlci9yZWFkIiwiZGVzY3JpcHRpb24iOiJHZXQgYWxsIHVzZXIifV0sImdyb3VwIjp7Il9pZCI6IjY1ZmFlNDRlODUwOTA1ZjA1ZjBlMjI4MCIsIm5vX2dyb3VwIjozLCJncm91cF9uYW1lIjoiTWFuYWdlciBDb29yZGluYXRvciAiLCJkZXNjcmlwdGlvbiI6IkNhbiBjb250cm9sIGFsbCBzZXJ2aWNlIGFib3V0IGNvbnRyaWJ1dGlvbnMgYXQgdGhpZXIgZmFjdWx0eSIsImNyZWF0ZWRBdCI6IjIwMjQtMDMtMjBUMTM6Mjc6NDIuOTQ5WiIsInVwZGF0ZWRBdCI6IjIwMjQtMDMtMjBUMTM6Mjc6NDIuOTQ5WiIsIl9fdiI6MH19LCJpYXQiOjE3MTE2MjY0MjZ9.d3F3AxmAAh_yzJuvBh5_2SwlNeMmQdU8f9phQScKYn8"; // your jwt token
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGJiNmY2YTdiMGRiZWE3OTc1NzExNiIsImVtYWlsIjoic3R1ZGVudDAxQGdtYWlsLmNvbSIsImdyb3VwV2l0aFJvbGUiOnsic1JvbGVzIjpbeyJ1cmwiOiIvdGVzdCIsImRlc2NyaXB0aW9uIjoiR2V0IGFsbCB1c2VyIn1dLCJncm91cCI6eyJfaWQiOiI2NWZhZTQ3NTg1MDkwNWYwNWYwZTIyODIiLCJub19ncm91cCI6NCwiZ3JvdXBfbmFtZSI6IlN0dWRlbnQiLCJkZXNjcmlwdGlvbiI6IkNhbiB1cGxvYWQgdGhpZXIgY29udHJpYnV0aW9ucyAiLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJfX3YiOjB9fSwiaWF0IjoxNzEyMDUwNTM3fQ.us07_fwWfY758BNd9emerAft2SQ3fBKmvJXDiElh69s"; // your jwt token
     const decoded = jwtAction.verifyToken(cookies);
     const student_id = decoded.id;
     const topic_id = req.body.topic_id;
@@ -88,7 +88,7 @@ const createContribution = async (req, res) => {
     const contribution = await newContribution.save();
     if (contribution) {
       const user = await User.findById(student_id);
-      let text = `The student "${user.username}" upload ${countSuccess} contribution to the system`;
+      let text = `The student "${user.email}" upload ${countSuccess} contribution to the system`;
       let email_status = await sendEmailMessage.sendEmail(email, text);
       console.log(email_status);
     }

@@ -17,7 +17,7 @@ const initApiRouter = (app) => {
   // routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
   // routerAPI.all("*",);
 
-  // Register
+  // -------------  Register ----------
   routerAPI.post("/register", authController.Register);
   routerAPI.post("/login", authController.Login);
 
