@@ -33,8 +33,7 @@ const postUploadMultipleFiles = async (req, res) => {
   }
   if (Array.isArray(req.files.file)) {
     for (const file of req.files.file) {
-      let mimeType = mime.lookup(req.files.file.name);
-
+      let mimeType = mime.lookup(file.name);
       if (!allowedMimeTypes.includes(mimeType)) {
         throw new Error(
           "Only image, Word, and PDF files are allowed. Please check your file(s) (multiple)."

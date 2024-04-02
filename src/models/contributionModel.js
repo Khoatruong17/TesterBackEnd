@@ -9,6 +9,9 @@ const contributionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "topics",
     },
+    topic_name: {
+      type: String,
+    },
     name: {
       type: String,
       required: true,
@@ -23,9 +26,6 @@ const contributionSchema = new mongoose.Schema(
     },
     document: {
       type: [String],
-    },
-    image: {
-      type: String,
     },
   },
   { timestamps: true }

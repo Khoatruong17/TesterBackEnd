@@ -51,6 +51,16 @@ Topic:
 - Create new topic ----> POST http://localhost:8081/v1/topic/create
 - Get All Topic ----> GET http://localhost:8081/v1/topic/read
 
-Contributions:
-
 -
+comment:
+- Get ALL Comment ----> GET http://localhost:8081/v1/comment
+- Add Comment ----> POST http://localhost:8081/v1/comment
+- Delete Comment ----> DELETE http://localhost:8081/v1/comment/delete/(id)
+- Update Comment ----> PUT http://localhost:8081/v1/comment/upadte/(id)
+
+document:
+- Get ALL document ----> GET http://localhost:8081/v1/document
+- Add document ----> POST http://localhost:8081/v1/document/create
+- Delete document ----> DELETE http://localhost:8081/v1/document/delete/(id)
+- Update document ----> PUT http://localhost:8081/v1/document/upadte/(id)
+- 
