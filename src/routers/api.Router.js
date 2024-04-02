@@ -76,7 +76,7 @@ const initApiRouter = (app) => {
   // routerAPI.put("/topic/:id", topic.updateTopic);
 
   // group role router
-  routerAPI.post("/grouprole", connectGR.createCGR); // add group role connection
+  routerAPI.post("/grouprole/create", connectGR.createCGR); // add group role connection
 
   //api upload file
   routerAPI.post("/file/single", upFile.postUploadSingleFile); // up single file to server

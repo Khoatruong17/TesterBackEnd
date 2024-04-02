@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const User = require("../models/userModel");
 const GroupModel = require("../models/groupModel");
+const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
 const getGWR = require("../services/jwt.Service");
 const JWTaction = require("../middleware/jwtAction");
@@ -66,6 +67,7 @@ const registerNewUser = async (rawUserData) => {
           EC: 1,
         };
       }
+
       // create new user
       const user = new User({
         username: rawUserData.username,
@@ -77,6 +79,21 @@ const registerNewUser = async (rawUserData) => {
         },
       });
 
+      if (rawUserData.faculty_id) {
+        const find_faculty = await FacultyModel.findById(
+          rawUserData.faculty_id
+        );
+        if (!find_faculty) {
+          return {
+            EM: "Can't find Faculty",
+            EC: 1,
+          };
+        }
+        user.faculty = {
+          faculty_id: find_faculty._id,
+          faculty_name: find_faculty.faculty_name,
+        };
+      }
       try {
         const result = await user.save();
         console.log(result);

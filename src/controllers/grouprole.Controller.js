@@ -2,23 +2,22 @@ const express = require("express");
 const groupRole = require("../models/grouproleModel");
 
 const createCGR = async (req, res) => {
-    try {
-      // Create a new connect group with role
-      const newCGR = await new groupRole({
-        group_id: req.body.group_id,
-        role_id: req.body.role_id
-      });
-      // Save the connect to the database
-      const CGR = await newCGR.save();
-      console.log("Add connect group with role successfully");
-      res.status(200).json(CGR);
-    } catch (error) {
-      console.log("Error create connect group with role (controller): " + error);
-      res.status(500).json({ error: error.message });
-    }
-}
-
-
+  try {
+    // Create a new connect group with role
+    const newCGR = await new groupRole({
+      group_id: req.body.group_id,
+      role_id: req.body.role_id,
+      description: req.body.description,
+    });
+    // Save the connect to the database
+    const CGR = await newCGR.save();
+    console.log("Add connect group with role successfully");
+    res.status(200).json(CGR);
+  } catch (error) {
+    console.log("Error create connect group with role (controller): " + error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // const groupController = {
 
@@ -99,5 +98,5 @@ const createCGR = async (req, res) => {
 // };
 
 module.exports = {
-  createCGR
+  createCGR,
 };
