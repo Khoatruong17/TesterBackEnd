@@ -34,16 +34,16 @@ const initApiRouter = (app) => {
   routerAPI.post(
     "/contribution/create",
     contributionController.createContribution
-  );
+  ); // create contribution
   routerAPI.get(
     "/contribution/read",
     contributionController.getAllContribution
-  );
-  // routerAPI.delete(
-  //   "/contribution/:id",
-  //   contributionController.deleteContribution
-  // );
-  // routerAPI.put("/contribution/:id", contributionController.updateContribution);
+  ); // get all contribution
+
+  routerAPI.get(
+    "/contribution/download/:id",
+    contributionController.downloadContribution
+  ); // download contribution by id
 
   // document router
   routerAPI.post("/document", documentController.createDocument);

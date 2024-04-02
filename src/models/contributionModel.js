@@ -27,9 +27,6 @@ const contributionSchema = new mongoose.Schema(
     document: {
       type: [String],
     },
-    image: {
-      type: String,
-    },
   },
   { timestamps: true }
 );

@@ -5,6 +5,9 @@ const uploadFile = require("../controllers/file.Controller");
 const Topic = require("../models/topicModel");
 const User = require("../models/userModel");
 const sendEmailMessage = require("../services/sendMail.Service");
+const Contribution = require("../models/contributionModel");
+const fs = require("fs").promises;
+const expressZip = require("express-zip");
 const path = require("path");
 
 const findUser = async (topic_id) => {
@@ -55,17 +58,14 @@ const createContribution = async (req, res) => {
 
     const email = "truongndkgch190486@fpt.edu.vn";
 
-    // You need to pass req object to the function
     const filePath = await uploadFile.postUploadMultipleFiles(req);
     let documents = [];
     let countSuccess;
     console.log(filePath);
     if (Array.isArray(filePath.detail)) {
-      // If multiple files are uploaded
       documents = filePath.detail.map((detail) => detail.path);
       countSuccess = filePath.countSuccess;
     } else if (filePath.DT.path) {
-      // If only one file is uploaded
       documents = filePath.DT.path;
       countSuccess = 1;
     } else {
@@ -116,7 +116,41 @@ const getAllContribution = async (req, res) => {
   }
 };
 
+// download a contribution from server
+const downloadContribution = async (req, res) => {
+  try {
+    const contribution = await Contribution.findById(req.params.id);
+
+    if (!contribution) {
+      return res.status(404).json({ message: "Contribution not found" });
+    }
+    const files = contribution.document;
+    const foundFiles = [];
+    const notFoundFiles = [];
+    // Check if each file exists, if not, add it to notFoundFiles
+    for (const file of files) {
+      try {
+        await fs.access(file); // Check if the file exists
+        foundFiles.push({ path: file, name: path.basename(file) });
+      } catch (error) {
+        notFoundFiles.push(path.basename(file));
+      }
+    }
+    if (foundFiles.length === 0) {
+      return res.status(404).json({ message: "No valid files found" });
+    }
+    if (notFoundFiles.length > 0) {
+      console.log("Files not found:", notFoundFiles);
+    }
+    res.zip(foundFiles);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   createContribution,
   getAllContribution,
+  downloadContribution,
 };
