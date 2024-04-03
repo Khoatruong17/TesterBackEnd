@@ -30,6 +30,9 @@ const initApiRouter = (app) => {
   routerAPI.delete("/comment/:id", commentController.deleteComment);
   routerAPI.put("/comment/:id", commentController.updateComment);
 
+  //get comment for student
+  routerAPI.get("/commentforS/read", commentController.getCommentsForStudent);
+
   // contribution router
   routerAPI.post(
     "/contribution/create",

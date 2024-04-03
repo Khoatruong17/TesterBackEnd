@@ -27,6 +27,17 @@ const contributionSchema = new mongoose.Schema(
     document: {
       type: [String],
     },
+    comments: [
+      {
+        comment_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "comments",
+        },
+        comment: {
+          type: String,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
