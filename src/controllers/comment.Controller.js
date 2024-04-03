@@ -51,6 +51,13 @@ const commentController = {
   getCommentsForStudent: async (req, res) => {
     try {
       const contributionId = req.body.contribution_id;
+      if (!contributionId) {
+        console.log("No contribution have been found");
+        return res
+          .status(404)
+          .json({ message: "No contribution have been found" });
+      }
+
       const comments = await Comments.find({
         contribution_id: contributionId,
       }).select("user_id comment createdAt updatedAt");
@@ -59,7 +66,7 @@ const commentController = {
         console.log("No comments have been found");
         return res
           .status(404)
-          .json({ error: "The contribution doesn't have comment" });
+          .json({ message: "The contribution doesn't have comment" });
       }
 
       const formattedComments = [];
