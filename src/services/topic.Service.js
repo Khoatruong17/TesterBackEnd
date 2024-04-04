@@ -65,11 +65,20 @@ const createNewTopic = async (requestData) => {
       };
     }
 
+    const start_date_utc = moment
+      .tz(requestData.start_date, "Asia/Bangkok")
+      .utc()
+      .toDate();
+    const end_date_utc = moment
+      .tz(requestData.end_date, "Asia/Bangkok")
+      .utc()
+      .toDate();
+
     const newTopic = new TopicModel({
       name: requestData.name,
       description: requestData.description,
-      start_date: requestData.start_date,
-      end_date: requestData.end_date,
+      start_date: start_date_utc,
+      end_date: end_date_utc,
       user_id: user_id,
       faculty_id: requestData.faculty_id,
     });
