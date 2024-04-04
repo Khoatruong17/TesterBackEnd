@@ -27,9 +27,7 @@ Comments for Coordinator (Trả về time còn lại)
 Contributions:
 
 - Create new contribution ------> POST http://localhost:8081/v1/contribution/create
-
-* requirements: topic_id, name, description, file in body
-
+  (requirements: topic_id, name, description, file in body)
 - Show contribution for Faculty ------> GET http://localhost:8081/v1/contribution/readbyfaculty
   \*(truyền vào contributions_id, và status(0,1,2))
 
