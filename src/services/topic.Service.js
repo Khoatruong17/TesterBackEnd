@@ -37,7 +37,6 @@ const createNewTopic = async (requestData) => {
     // check start-date
     if (!isValidStartDate(requestData.start_date)) {
       console.log(requestData.start_date);
-
       console.log("Start date must be greater than or equal to today's date ");
       return {
         EM: "Start date must be greater than or equal to today's date",
