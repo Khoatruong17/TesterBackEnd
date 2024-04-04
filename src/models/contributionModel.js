@@ -12,6 +12,10 @@ const contributionSchema = new mongoose.Schema(
     topic_name: {
       type: String,
     },
+    faculty_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "faculty",
+    },
     name: {
       type: String,
       required: true,
@@ -38,6 +42,9 @@ const contributionSchema = new mongoose.Schema(
         },
       },
     ],
+    status: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

@@ -51,12 +51,23 @@ const createContribution = async (req, res) => {
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGJiNmY2YTdiMGRiZWE3OTc1NzExNiIsImVtYWlsIjoic3R1ZGVudDAxQGdtYWlsLmNvbSIsImdyb3VwV2l0aFJvbGUiOnsic1JvbGVzIjpbeyJ1cmwiOiIvdGVzdCIsImRlc2NyaXB0aW9uIjoiR2V0IGFsbCB1c2VyIn1dLCJncm91cCI6eyJfaWQiOiI2NWZhZTQ3NTg1MDkwNWYwNWYwZTIyODIiLCJub19ncm91cCI6NCwiZ3JvdXBfbmFtZSI6IlN0dWRlbnQiLCJkZXNjcmlwdGlvbiI6IkNhbiB1cGxvYWQgdGhpZXIgY29udHJpYnV0aW9ucyAiLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJfX3YiOjB9fSwiaWF0IjoxNzEyMDUwNTM3fQ.us07_fwWfY758BNd9emerAft2SQ3fBKmvJXDiElh69s"; // your jwt token
     const decoded = jwtAction.verifyToken(cookies);
     const student_id = decoded.id;
+
+    const student = await User.findById(student_id);
+    if (!student) {
+      throw new Error(
+        "Student not found, please check token (take student_id by token)"
+      );
+    }
+    const facultiy_id = student.faculty.faculty_id;
+    if (!facultiy_id) {
+      throw new Error("The user does not have faculty_id, please check again");
+    }
+
     const topic_id = req.body.topic_id;
     const topic = await Topic.findById(topic_id);
     if (!topic) {
       throw new Error("Topic not found, please check topic_id");
     }
-
     const email = "truongndkgch190486@fpt.edu.vn";
 
     const filePath = await uploadFile.postUploadMultipleFiles(req);
@@ -81,10 +92,12 @@ const createContribution = async (req, res) => {
       user_id: student_id,
       topic_id: topic_id,
       topic_name: topic.name,
+      faculty_id: facultiy_id,
       name: req.body.name,
       description: req.body.description,
       document: documents,
       submit_date: currentDate,
+      status: 0,
     });
     const contribution = await newContribution.save();
     if (contribution) {
@@ -123,7 +136,31 @@ const showcontributionbyFaculty = async (req, res) => {
     if (!faculty) {
       throw new Error("Faculty not found, please check faculty_id");
     }
-  } catch (e) {
+    const contribution = await Contributions.find({
+      faculty_id: faculty._id,
+    });
+    if (!contribution) {
+      throw new Error("Contribution not found (find by faculty_id)");
+    }
+    const status = req.body.status;
+    //const status_contribution = await contribution.find({ status: status });
+    if (status) {
+      const contributionByStatus = await Contributions.find({
+        faculty_id: faculty._id,
+        status: status,
+      });
+      return res.status(200).json({
+        EM: "success (get by status)",
+        EC: 0,
+        DT: contributionByStatus,
+      });
+    }
+    return res.status(200).json({
+      EM: "success",
+      EC: 0,
+      DT: contribution,
+    });
+  } catch (error) {
     console.log("Error get contribution by  --: " + error);
     res.status(500).json({ error: error.message });
   }
@@ -166,4 +203,5 @@ module.exports = {
   createContribution,
   getAllContribution,
   downloadContribution,
+  showcontributionbyFaculty,
 };

@@ -27,8 +27,8 @@ const initApiRouter = (app) => {
   // comment router
   routerAPI.post("/comment", commentController.createComment);
   routerAPI.get("/comment", commentController.getAllComment);
-  routerAPI.delete("/comment/:id", commentController.deleteComment);
-  routerAPI.put("/comment/:id", commentController.updateComment);
+  routerAPI.delete("/comment/delete", commentController.deleteComment);
+  routerAPI.put("/comment/update", commentController.updateComment);
 
   //get comment for student
   routerAPI.get("/commentforS/read", commentController.getCommentsForStudent);
@@ -37,7 +37,11 @@ const initApiRouter = (app) => {
   routerAPI.post(
     "/contribution/create",
     contributionController.createContribution
-  ); // create contribution
+  ); // get contribution by faculty_id
+  routerAPI.get(
+    "/contribution/readbyfaculty",
+    contributionController.showcontributionbyFaculty
+  ); // get all contribution
   routerAPI.get(
     "/contribution/read",
     contributionController.getAllContribution

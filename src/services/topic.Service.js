@@ -26,10 +26,6 @@ const checkName = async (topicName) => {
   return false;
 };
 
-function convertToUTCDate(dateString) {
-  return moment.utc(dateString, "YYYY-MM-DD HH:mm:ss").toDate();
-}
-
 const createNewTopic = async (requestData) => {
   try {
     let cookies =
@@ -68,14 +64,11 @@ const createNewTopic = async (requestData) => {
       };
     }
 
-    const start_date_utc = convertToUTCDate(requestData.start_date);
-    const end_date_utc = convertToUTCDate(requestData.end_date);
-
     const newTopic = new TopicModel({
       name: requestData.name,
       description: requestData.description,
-      start_date: start_date_utc,
-      end_date: end_date_utc,
+      start_date: requestData.start_date,
+      end_date: requestData.end_date,
       user_id: user_id,
       faculty_id: requestData.faculty_id,
     });

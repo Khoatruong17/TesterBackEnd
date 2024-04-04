@@ -18,12 +18,43 @@ const commentController = {
       });
 
       if (!contributionExists) {
-        return res.status(404).json({ error: "contribution id not found " });
+        return res.status(404).json({ error: "Contribution id not found" });
       }
+
+      const currentTime = new Date();
+      const millisecondsPerDay = 24 * 60 * 60 * 1000;
+      const millisecondsPerHour = 60 * 60 * 1000;
+      const millisecondsPerMinute = 60 * 1000;
+
+      const timeDifference =
+        14 * millisecondsPerDay -
+        (currentTime - contributionExists.submit_date);
+
+      if (timeDifference <= 0) {
+        return res.status(400).json({ error: "14 days to comment have ended" });
+      }
+
+      const daysLeft = Math.floor(timeDifference / millisecondsPerDay);
+      const hoursLeft = Math.floor(
+        (timeDifference % millisecondsPerDay) / millisecondsPerHour
+      );
+      const minutesLeft = Math.floor(
+        (timeDifference % millisecondsPerHour) / millisecondsPerMinute
+      );
+      const secondsLeft = Math.floor(
+        (timeDifference % millisecondsPerMinute) / 1000
+      );
+
+      const remainingTime = {
+        day: daysLeft,
+        hours: hoursLeft,
+        minutes: minutesLeft,
+        seconds: secondsLeft,
+      };
 
       const userExists = await User.findOne({ _id: coordinator_id });
       if (!userExists) {
-        return res.status(404).json({ error: "user id not found " });
+        return res.status(404).json({ error: "User id not found" });
       }
 
       const newComment = new Comments({
@@ -40,8 +71,9 @@ const commentController = {
       });
 
       await contributionExists.save();
+
       console.log("Add comment Successfully");
-      res.status(200).json(savedComment);
+      res.status(200).json({ savedComment, remainingTime });
     } catch (error) {
       console.log("Error create comment: " + error);
       res.status(500).json({ error: error.message });
@@ -108,12 +140,20 @@ const commentController = {
   // Delete a comment
   deleteComment: async (req, res) => {
     try {
-      const comment = await Comments.findByIdAndDelete(req.params.id);
+      const comment_id = req.body.comment_id;
+      const comment = await Comments.findOne({
+        _id: comment_id,
+      });
+
       if (!comment) {
-        return res.status(404).json({ message: "Comment not found" });
+        return res.status(404).json({ error: "Comment not found" });
       }
+      // Xoá comment
+      await Comments.deleteOne({
+        _id: comment_id,
+      });
+
       res.status(200).json({ message: "Comment deleted successfully" });
-      console.log(`Delete comment successfully`);
     } catch (error) {
       console.log("Error deleting comment: " + error);
       res.status(500).json({ error: error.message });
