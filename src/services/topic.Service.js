@@ -71,6 +71,7 @@ const createNewTopic = async (requestData) => {
       start_date: requestData.start_date,
       end_date: requestData.end_date,
       user_id: user_id,
+      faculty_id: requestData.faculty_id,
     });
     const savedTopic = await newTopic.save();
     return {
