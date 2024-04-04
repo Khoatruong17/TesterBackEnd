@@ -26,21 +26,11 @@ const checkName = async (topicName) => {
   return false;
 };
 
-const convertToUTCDate = (dateString) => {
-  let date = moment.tz(dateString, "Asia/Bangkok");
-  if (!date.isValid()) {
-    throw new Error("Invalid date format");
-  }
-  // Nếu giờ không được truyền vào, thiết lập giờ là 00:00:00
-  if (!date.format("HH:mm:ss")) {
-    date.set({ hour: 0, minute: 0, second: 0 });
-  }
-  // Chuyển đổi sang múi giờ UTC
-  return date.utc().toDate();
-};
+function convertToUTCDate(dateString) {
+  return moment.utc(dateString, "YYYY-MM-DD HH:mm:ss").toDate();
+}
 
 const createNewTopic = async (requestData) => {
-  // Accept requestData as a parameter
   try {
     let cookies =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZmI4ZWU0YmJjNGExODVkMmI3ZTUyMyIsImVtYWlsIjoibmFtYW5oQGdtYWlsLmNvbSIsImdyb3VwV2l0aFJvbGUiOnsic1JvbGVzIjpbeyJ1cmwiOiIvdXNlci9yZWFkIiwiZGVzY3JpcHRpb24iOiJHZXQgYWxsIHVzZXIifV0sImdyb3VwIjp7Il9pZCI6IjY1ZmFlNDRlODUwOTA1ZjA1ZjBlMjI4MCIsIm5vX2dyb3VwIjozLCJncm91cF9uYW1lIjoiTWFuYWdlciBDb29yZGluYXRvciAiLCJkZXNjcmlwdGlvbiI6IkNhbiBjb250cm9sIGFsbCBzZXJ2aWNlIGFib3V0IGNvbnRyaWJ1dGlvbnMgYXQgdGhpZXIgZmFjdWx0eSIsImNyZWF0ZWRBdCI6IjIwMjQtMDMtMjBUMTM6Mjc6NDIuOTQ5WiIsInVwZGF0ZWRBdCI6IjIwMjQtMDMtMjBUMTM6Mjc6NDIuOTQ5WiIsIl9fdiI6MH19LCJpYXQiOjE3MTE2MjY0MjZ9.d3F3AxmAAh_yzJuvBh5_2SwlNeMmQdU8f9phQScKYn8";
