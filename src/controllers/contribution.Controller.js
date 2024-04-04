@@ -4,6 +4,7 @@ const jwtAction = require("../middleware/jwtAction");
 const uploadFile = require("../controllers/file.Controller");
 const Topic = require("../models/topicModel");
 const User = require("../models/userModel");
+const Faculty = require("../models/facultyModel");
 const sendEmailMessage = require("../services/sendMail.Service");
 const Contribution = require("../models/contributionModel");
 const fs = require("fs").promises;
@@ -112,6 +113,18 @@ const getAllContribution = async (req, res) => {
     console.log("Get all contributions successfully");
   } catch (error) {
     console.log("Error get all contributions: " + error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const showcontributionbyFaculty = async (req, res) => {
+  try {
+    const faculty = await Faculty.findById(req.body.faculty_id);
+    if (!faculty) {
+      throw new Error("Faculty not found, please check faculty_id");
+    }
+  } catch (e) {
+    console.log("Error get contribution by  --: " + error);
     res.status(500).json({ error: error.message });
   }
 };
