@@ -7,6 +7,7 @@ const User = require("../models/userModel");
 const Faculty = require("../models/facultyModel");
 const sendEmailMessage = require("../services/sendMail.Service");
 const Contribution = require("../models/contributionModel");
+const Comments = require("../models/commentModel");
 const fs = require("fs").promises;
 const expressZip = require("express-zip");
 const path = require("path");
@@ -199,9 +200,30 @@ const downloadContribution = async (req, res) => {
   }
 };
 
+const delContribution = async (req, res) => {
+  try {
+    const contributionId = req.params.id;
+    const contribution = await Contributions.findById(contributionId);
+    if (!contribution) {
+      return res.status(404).json({ message: "Contribution not found" });
+    }
+    await Comments.deleteMany({ contribution_id: contributionId });
+    await Contributions.findByIdAndDelete(contributionId);
+
+    console.log("Contribution deleted successfully");
+    return res
+      .status(200)
+      .json({ message: "Contribution deleted successfully" });
+  } catch (error) {
+    console.log("Error deleting contribution: " + error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createContribution,
   getAllContribution,
   downloadContribution,
   showcontributionbyFaculty,
+  delContribution,
 };

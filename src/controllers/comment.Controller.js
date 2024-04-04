@@ -97,9 +97,7 @@ const commentController = {
 
       if (comments.length === 0) {
         console.log("No comments have been found");
-        return res
-          .status(404)
-          .json({ message: "The contribution doesn't have comment" });
+        return res.status(404).json({ message: "No comments have been found" });
       }
 
       const formattedComments = [];
@@ -124,8 +122,84 @@ const commentController = {
       res.status(500).json({ error: error.message });
     }
   },
-  // Get all the comments
-  // Get all the comments
+  // Get the comments for coordinator
+  getCommentsForCoordinator: async (req, res) => {
+    try {
+      const contributionId = req.body.contribution_id;
+      if (!contributionId) {
+        console.log("No contribution has been found");
+        return res
+          .status(404)
+          .json({ message: "No contribution has been found" });
+      }
+
+      const contribution = await Contributions.findById(contributionId);
+      if (!contribution) {
+        console.log("Contribution not found");
+        return res.status(404).json({ message: "Contribution not found" });
+      }
+
+      const currentTime = new Date();
+      const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
+      const timeDifference =
+        14 * millisecondsPerDay - (currentTime - contribution.submit_date);
+
+      if (timeDifference <= 0) {
+        console.log("14 days to comment have ended");
+        return res.status(400).json({ error: "14 days to comment have ended" });
+      }
+
+      const daysLeft = Math.floor(timeDifference / millisecondsPerDay);
+      const hoursLeft = Math.floor(
+        (timeDifference % millisecondsPerDay) / (60 * 60 * 1000)
+      );
+      const minutesLeft = Math.floor(
+        (timeDifference % (60 * 60 * 1000)) / (60 * 1000)
+      );
+      const secondsLeft = Math.floor((timeDifference % (60 * 1000)) / 1000);
+
+      const remainingTime = {
+        days: daysLeft,
+        hours: hoursLeft,
+        minutes: minutesLeft,
+        seconds: secondsLeft,
+      };
+
+      const comments = await Comments.find({
+        contribution_id: contributionId,
+      }).select("user_id comment createdAt updatedAt");
+
+      if (comments.length === 0) {
+        console.log("The contribution doesn't have any comments");
+        return res
+          .status(404)
+          .json({ message: "The contribution doesn't have any comments" });
+      }
+
+      const formattedComments = [];
+      for (const comment of comments) {
+        const user = await User.findById(comment.user_id);
+        if (!user) {
+          console.log("User not found for comment:", comment);
+          continue;
+        }
+        const formattedComment = {
+          username: user.username,
+          comment: comment.comment,
+          createdAt: comment.createdAt,
+          updatedAt: comment.updatedAt,
+        };
+        formattedComments.push(formattedComment);
+      }
+
+      return res.status(200).json({ formattedComments, remainingTime });
+    } catch (error) {
+      console.log("Error getting comments for contribution: " + error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
   getAllComment: async (req, res) => {
     try {
       const comment = await Comments.find();
@@ -148,7 +222,6 @@ const commentController = {
       if (!comment) {
         return res.status(404).json({ error: "Comment not found" });
       }
-      // Xoá comment
       await Comments.deleteOne({
         _id: comment_id,
       });

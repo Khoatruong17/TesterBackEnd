@@ -2,7 +2,6 @@ const routerAPI = require("express").Router();
 const authController = require("../controllers/auth.Controller");
 const commentController = require("../controllers/comment.Controller");
 const contributionController = require("../controllers/contribution.Controller");
-const documentController = require("../controllers/document.Controller");
 const facultyController = require("../controllers/faculty.Controller");
 const groupController = require("../controllers/group.Controller");
 const roleController = require("../controllers/role.Controller");
@@ -25,13 +24,18 @@ const initApiRouter = (app) => {
   routerAPI.get("/user/read", userController.getAllUser);
 
   // comment router
-  routerAPI.post("/comment", commentController.createComment);
-  routerAPI.get("/comment", commentController.getAllComment);
+  routerAPI.post("/comment/create", commentController.createComment);
+  routerAPI.get("/comment/readAll", commentController.getAllComment);
   routerAPI.delete("/comment/delete", commentController.deleteComment);
   routerAPI.put("/comment/update", commentController.updateComment);
 
   //get comment for student
   routerAPI.get("/commentforS/read", commentController.getCommentsForStudent);
+  // get comments for coordinator (return time)
+  routerAPI.get(
+    "/commentforC/read",
+    commentController.getCommentsForCoordinator
+  );
 
   // contribution router
   routerAPI.post(
@@ -41,44 +45,42 @@ const initApiRouter = (app) => {
   routerAPI.get(
     "/contribution/readbyfaculty",
     contributionController.showcontributionbyFaculty
-  ); // get all contribution
+  ); // get contribution for Faculty
   routerAPI.get(
     "/contribution/read",
     contributionController.getAllContribution
   ); // get all contribution
+  routerAPI.delete(
+    "/contribution/delete/:id",
+    contributionController.delContribution
+  ); // delete
 
   routerAPI.get(
     "/contribution/download/:id",
     contributionController.downloadContribution
   ); // download contribution by id
 
-  // document router
-  routerAPI.post("/document", documentController.createDocument);
-  routerAPI.get("/document", documentController.getAllDocument);
-  routerAPI.delete("/document/:id", documentController.deleteDocument);
-  routerAPI.put("/document/:id", documentController.updateDocument);
-
   // faculty router
   routerAPI.post("/faculty/create", facultyController.createFaculty);
-  routerAPI.get("/faculty", facultyController.getAllFaculty);
+  routerAPI.get("/faculty/readAll", facultyController.getAllFaculty);
   routerAPI.delete("/faculty/delete/:id", facultyController.deleteFaculty);
   routerAPI.put("/faculty/update/:id", facultyController.updateFaculty);
 
   // group router
   routerAPI.post("/group/create", groupController.createGroup);
-  routerAPI.get("/group", groupController.getAllGroup);
+  routerAPI.get("/group/readAll", groupController.getAllGroup);
   routerAPI.delete("/group/delete/:id", groupController.deleteGroup);
   routerAPI.put("/group/edit/:id", groupController.updateGroup);
 
   // role router
-  routerAPI.post("/role", roleController.createRole);
-  routerAPI.get("/role/read", roleController.getAllGroup);
+  routerAPI.post("/role/create", roleController.createRole);
+  routerAPI.get("/role/readAll", roleController.getAllGroup);
   //routerAPI.delete("/group/:id", groupController.deleteGroup);
   //routerAPI.put("/group/:id", groupController.updateGroup);
 
   // topic router
   routerAPI.post("/topic/create", topicController.createTopic);
-  routerAPI.get("/topic/read", topicController.getAllTopic);
+  routerAPI.get("/topic/readAll", topicController.getAllTopic);
   // routerAPI.delete("/topic/:id", topic.deleteTopic);
   // routerAPI.put("/topic/:id", topic.updateTopic);
 
