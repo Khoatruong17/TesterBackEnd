@@ -26,6 +26,19 @@ const checkName = async (topicName) => {
   return false;
 };
 
+const convertToUTCDate = (dateString) => {
+  let date = moment.tz(dateString, "Asia/Bangkok");
+  if (!date.isValid()) {
+    throw new Error("Invalid date format");
+  }
+  // Nếu giờ không được truyền vào, thiết lập giờ là 00:00:00
+  if (!date.format("HH:mm:ss")) {
+    date.set({ hour: 0, minute: 0, second: 0 });
+  }
+  // Chuyển đổi sang múi giờ UTC
+  return date.utc().toDate();
+};
+
 const createNewTopic = async (requestData) => {
   // Accept requestData as a parameter
   try {
@@ -65,14 +78,8 @@ const createNewTopic = async (requestData) => {
       };
     }
 
-    const start_date_utc = moment
-      .tz(requestData.start_date, "Asia/Bangkok")
-      .utc()
-      .toDate();
-    const end_date_utc = moment
-      .tz(requestData.end_date, "Asia/Bangkok")
-      .utc()
-      .toDate();
+    const start_date_utc = convertToUTCDate(requestData.start_date);
+    const end_date_utc = convertToUTCDate(requestData.end_date);
 
     const newTopic = new TopicModel({
       name: requestData.name,
