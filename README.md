@@ -58,6 +58,7 @@ Topic:
 
 - Create new topic ----> POST http://localhost:8081/v1/topic/create
 - Get All Topic ----> GET http://localhost:8081/v1/topic/readAll
+- Delete Topic ----> DELETE http://localhost:8081/v1//topic/delete/id
 
 Group with Role:
 

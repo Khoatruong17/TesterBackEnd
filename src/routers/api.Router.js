@@ -81,7 +81,7 @@ const initApiRouter = (app) => {
   // topic router
   routerAPI.post("/topic/create", topicController.createTopic);
   routerAPI.get("/topic/readAll", topicController.getAllTopic);
-  // routerAPI.delete("/topic/:id", topic.deleteTopic);
+  routerAPI.delete("/topic/delete/:id", topicController.deletedTopic);
   // routerAPI.put("/topic/:id", topic.updateTopic);
 
   // group role router

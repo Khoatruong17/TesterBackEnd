@@ -35,7 +35,31 @@ const getAllTopic = async (req, res) => {
   }
 };
 
+const deletedTopic = async (req, res) => {
+  try {
+    const result = await TopicModel.findByIdAndDelete(req.params.id);
+    if (!result) {
+      return res.status(404).json({
+        EM: "Topic not found",
+        EC: "-1",
+      });
+    }
+    return res.status(200).json({
+      EM: "Delete success",
+      EC: "0",
+      DT: result,
+    });
+  } catch (error) {
+    console.log(">> Delete Topic Fail: ", error);
+    return res.status(500).json({
+      EM: "error from server (controller)",
+      EC: "-1",
+    });
+  }
+};
+
 module.exports = {
   createTopic,
   getAllTopic,
+  deletedTopic,
 };
