@@ -48,13 +48,13 @@ const createContribution = async (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.status(400).send("No files were uploaded.");
     }
-
     let cookie = req.cookies;
     if (!cookie) {
       return res.status(400).send("No cookies found. Please Login!!!");
     }
     console.log(">>> My Cookie: ", cookie);
-
+    //const cookie =
+    ("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGJiNmY2YTdiMGRiZWE3OTc1NzExNiIsImVtYWlsIjoic3R1ZGVudDAxQGdtYWlsLmNvbSIsImdyb3VwV2l0aFJvbGUiOnsic1JvbGVzIjpbeyJ1cmwiOiIvdGVzdCIsImRlc2NyaXB0aW9uIjoiR2V0IGFsbCB1c2VyIn1dLCJncm91cCI6eyJfaWQiOiI2NWZhZTQ3NTg1MDkwNWYwNWYwZTIyODIiLCJub19ncm91cCI6NCwiZ3JvdXBfbmFtZSI6IlN0dWRlbnQiLCJkZXNjcmlwdGlvbiI6IkNhbiB1cGxvYWQgdGhpZXIgY29udHJpYnV0aW9ucyAiLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJfX3YiOjB9fSwiaWF0IjoxNzEyMDUwNTM3fQ.us07_fwWfY758BNd9emerAft2SQ3fBKmvJXDiElh69s"); // your jwt token
     const decoded = jwtAction.verifyToken(cookie.jwt);
     const student_id = decoded.id;
 
@@ -64,8 +64,8 @@ const createContribution = async (req, res) => {
         "Student not found, please check token (take student_id by token)"
       );
     }
-    const faculty_id = student.faculty.faculty_id;
-    if (!faculty_id) {
+    const facultiy_id = student.faculty.faculty_id;
+    if (!facultiy_id) {
       throw new Error("The user does not have faculty_id, please check again");
     }
 
@@ -93,12 +93,12 @@ const createContribution = async (req, res) => {
     const currentDate = new Date();
 
     console.log(">>> File Path", documents);
-
+    //console.log({filePath,currentDate,student_id,topic_id});
     const newContribution = new Contributions({
       user_id: student_id,
       topic_id: topic_id,
       topic_name: topic.name,
-      faculty_id: faculty_id, // Corrected spelling from "facultiy_id" to "faculty_id"
+      faculty_id: facultiy_id,
       name: req.body.name,
       description: req.body.description,
       document: documents,
@@ -108,7 +108,7 @@ const createContribution = async (req, res) => {
     const contribution = await newContribution.save();
     if (contribution) {
       const user = await User.findById(student_id);
-      let text = `The student "${user.email}" uploaded ${countSuccess} contribution(s) to the system`;
+      let text = `The student "${user.email}" upload ${countSuccess} contribution to the system`;
       let email_status = await sendEmailMessage.sendEmail(email, text);
       console.log(email_status);
     }
@@ -116,17 +116,11 @@ const createContribution = async (req, res) => {
     console.log("Add contribution Successfully");
     return res.status(200).json({
       message: "Add contribution Successfully",
-      contribution: contribution,
+      contribution: contribution, // Optionally, you can return the created contribution
     });
   } catch (error) {
     console.log("Error create contribution --: " + error);
-    if (error instanceof jwt.JsonWebTokenError) {
-      return res.status(400).json({ error: "Invalid JWT token." });
-    } else if (error instanceof mongoose.CastError) {
-      return res.status(400).json({ error: "Invalid ID format." });
-    } else {
-      return res.status(500).json({ error: error.message });
-    }
+    res.status(500).json({ error: error.message });
   }
 };
 
