@@ -53,8 +53,6 @@ const createContribution = async (req, res) => {
       return res.status(400).send("No cookies found. Please Login!!!");
     }
     console.log(">>> My Cookie: ", cookie);
-    //const cookie =
-    ("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGJiNmY2YTdiMGRiZWE3OTc1NzExNiIsImVtYWlsIjoic3R1ZGVudDAxQGdtYWlsLmNvbSIsImdyb3VwV2l0aFJvbGUiOnsic1JvbGVzIjpbeyJ1cmwiOiIvdGVzdCIsImRlc2NyaXB0aW9uIjoiR2V0IGFsbCB1c2VyIn1dLCJncm91cCI6eyJfaWQiOiI2NWZhZTQ3NTg1MDkwNWYwNWYwZTIyODIiLCJub19ncm91cCI6NCwiZ3JvdXBfbmFtZSI6IlN0dWRlbnQiLCJkZXNjcmlwdGlvbiI6IkNhbiB1cGxvYWQgdGhpZXIgY29udHJpYnV0aW9ucyAiLCJjcmVhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJ1cGRhdGVkQXQiOiIyMDI0LTAzLTIwVDEzOjI4OjIxLjc5MFoiLCJfX3YiOjB9fSwiaWF0IjoxNzEyMDUwNTM3fQ.us07_fwWfY758BNd9emerAft2SQ3fBKmvJXDiElh69s"); // your jwt token
     const decoded = jwtAction.verifyToken(cookie.jwt);
     const student_id = decoded.id;
 
