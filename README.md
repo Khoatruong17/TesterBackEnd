@@ -7,8 +7,8 @@ Login/Register
 - Register ---------> POST http://localhost:8081/v1/register
 
 User
-
 - Get All Users ---------> GET http://localhost:8081/v1/user/read
+
 
 Comment:
 

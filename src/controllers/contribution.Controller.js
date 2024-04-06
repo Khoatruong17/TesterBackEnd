@@ -49,7 +49,7 @@ const createContribution = async (req, res) => {
       return res.status(400).send("No files were uploaded.");
     }
     let cookie = req.cookies;
-    if (!cookie) {
+    if (!cookie || cookie.length === 0) {
       return res.status(400).send("No cookies found. Please Login!!!");
     }
     console.log(">>> My Cookie: ", cookie);
@@ -62,8 +62,8 @@ const createContribution = async (req, res) => {
         "Student not found, please check token (take student_id by token)"
       );
     }
-    const facultiy_id = student.faculty.faculty_id;
-    if (!facultiy_id) {
+    const faculty_id = student.faculty.faculty_id;
+    if (!faculty_id) {
       throw new Error("The user does not have faculty_id, please check again");
     }
 
@@ -96,7 +96,7 @@ const createContribution = async (req, res) => {
       user_id: student_id,
       topic_id: topic_id,
       topic_name: topic.name,
-      faculty_id: facultiy_id,
+      faculty_id: faculty_id,
       name: req.body.name,
       description: req.body.description,
       document: documents,
