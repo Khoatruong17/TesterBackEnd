@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require('validator');
 require("dotenv").config();
 const User = require("../models/userModel");
 const GroupModel = require("../models/groupModel");
@@ -18,6 +19,7 @@ const hashUserPassword = async (password) => {
     throw error;
   }
 };
+
 // check user email
 const checkEmail = async (userEmail) => {
   const emailExists = await User.findOne({ email: userEmail });
@@ -26,6 +28,7 @@ const checkEmail = async (userEmail) => {
   }
   return false;
 };
+
 // check user username
 const checkUsername = async (username) => {
   const usernameExists = await User.findOne({ username: username });
@@ -35,10 +38,14 @@ const checkUsername = async (username) => {
   return false;
 };
 
+const isPasswordStrong = (password) => {
+  return password.length >= 8;
+};
+
 const registerNewUser = async (rawUserData) => {
   try {
     // check email are exists
-    const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(rawUserData.email);
+    const isEmail = validator.isEmail(rawUserData.email);
     if (isEmail) {
       let isEmailExists = await checkUsername(rawUserData.username);
       if (isEmailExists == true) {
@@ -55,6 +62,12 @@ const registerNewUser = async (rawUserData) => {
         };
       }
       // hash user password
+      if (!isPasswordStrong(rawUserData.password)) {
+        return {
+          EM: "Password is too weak",
+          EC: 1,
+        };
+      }
       let hashPassword = await hashUserPassword(rawUserData.password);
       // find roles by id
       const find_group = await GroupModel.findById(
@@ -126,9 +139,10 @@ const checkPassword = (inputPassword, hashPassword) => {
   // insert right password --> true
   // insert wrong password --> false
 };
+
 const UserLogin = async (rawData) => {
   try {
-    const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(rawData.email);
+    const isEmail = validator.isEmail(rawData.email);
     if (isEmail) {
       let user = await User.findOne({ email: rawData.email });
       if (user) {
@@ -159,12 +173,12 @@ const UserLogin = async (rawData) => {
         EC: 1,
         DT: "",
       };
-    } else {
+    } else{
       return {
-        EM: "user name is not a email",
+        EM: "user name is not a email or is not email",
         EC: 1,
         DT: "",
-      };
+      };  
     }
   } catch (e) {
     console.log(">>> Error login user (service): " + e.message);
