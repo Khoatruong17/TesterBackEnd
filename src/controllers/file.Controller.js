@@ -1,5 +1,6 @@
 const uploadFile = require("../services/file.Service");
 const mime = require("mime-types");
+const path = require("path");
 
 let allowedMimeTypes = [
   "image/jpeg",
@@ -47,7 +48,40 @@ const postUploadMultipleFiles = async (req, res) => {
   }
 };
 
+const uploadImage = async (req, res) => {
+  if (
+    !req.files ||
+    !req.files.image ||
+    Object.keys(req.files.image).length === 0
+  ) {
+    return res.status(400).send("No files were uploaded.");
+  }
+
+  const image = req.files.image;
+
+  // Check if the file is an image
+  const allowedImageTypes = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+  if (!allowedImageTypes.test(path.extname(image.name))) {
+    return res.status(400).json({
+      EM: "Only image files are allowed (JPEG, JPG, PNG, GIF)",
+      EC: 1,
+    });
+  }
+
+  try {
+    let result = await uploadFile.uploadImageUser(image);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.log("Error uploading image:", error);
+    return res.status(500).json({
+      EM: "An error occurred while uploading the image",
+      EC: 1,
+    });
+  }
+};
+
 module.exports = {
   postUploadSingleFile,
   postUploadMultipleFiles,
+  uploadImage,
 };

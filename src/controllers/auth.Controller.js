@@ -37,7 +37,7 @@ const Register = async (req, res) => {
       });
     }
     // service create user
-    let data = await registerLoginService.registerNewUser(req.body);
+    let data = await registerLoginService.registerNewUser(req);
     return res.status(200).json({
       EM: data.EM, //create user success message
       EC: data.EC,

@@ -94,6 +94,7 @@ const initApiRouter = (app) => {
   //api upload file
   routerAPI.post("/file/single", upFile.postUploadSingleFile); // up single file to server
   routerAPI.post("/file/multiple", upFile.postUploadMultipleFiles); // up multiple file to server
+  routerAPI.post("/file/image", upFile.uploadImage); // upload image
   // send Email
   routerAPI.post("/sendmail", sendEmail.sendMail); // send Email
   return app.use("/v1/", routerAPI);

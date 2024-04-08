@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const validator = require("validator");
 require("dotenv").config();
 const User = require("../models/userModel");
@@ -6,8 +5,9 @@ const GroupModel = require("../models/groupModel");
 const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
 const getGWR = require("../services/jwt.Service");
-const upFile = require("../services/file.Service");
+const uploadFile = require("../services/file.Service");
 const JWTaction = require("../middleware/jwtAction");
+const path = require("path");
 
 //---------------- Register ------------------
 const hashUserPassword = async (password) => {
@@ -43,26 +43,28 @@ const isPasswordStrong = (password) => {
   const uppercaseRegex = /[A-Z]/;
   const lengthRegex = /.{8,}/;
   const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  const numberRegex = /\d/;
 
   return (
     uppercaseRegex.test(password) &&
     lengthRegex.test(password) &&
-    specialCharRegex.test(password)
+    specialCharRegex.test(password) &&
+    numberRegex.test(password)
   );
 };
 
-const registerNewUser = async (rawUserData) => {
+const registerNewUser = async (req) => {
   try {
-    const isEmail = validator.isEmail(rawUserData.email);
+    const isEmail = validator.isEmail(req.body.email);
     if (isEmail) {
-      let isEmailExists = await checkUsername(rawUserData.username);
+      let isEmailExists = await checkUsername(req.body.username);
       if (isEmailExists == true) {
         return {
           EM: "The username already exists",
           EC: 1,
         };
       }
-      let isUsernameExists = await checkEmail(rawUserData.email);
+      let isUsernameExists = await checkEmail(req.body.email);
       if (isUsernameExists == true) {
         return {
           EM: "The email already exists",
@@ -70,27 +72,18 @@ const registerNewUser = async (rawUserData) => {
         };
       }
 
-      if (!isPasswordStrong(rawUserData.password)) {
+      if (!isPasswordStrong(req.body.password)) {
         return {
           EM: "Password must contain at least one uppercase letter, one special character, and be at least 8 characters long.",
           EC: 1,
         };
       }
 
-      // Upload user image
-      const imageUploadResult = await upFile.uploadImageUser(rawUserData.image);
-      if (imageUploadResult.EC !== 0) {
-        return {
-          EM: "Image upload failed",
-          EC: 1,
-        };
-      }
-      let hashPassword = await hashUserPassword(rawUserData.password);
+      let hashPassword = await hashUserPassword(req.body.password);
       // find roles by id
-      const find_group = await GroupModel.findById(
-        rawUserData.group_id
-      ).populate("_id");
-      console.log(find_group);
+      const find_group = await GroupModel.findById(req.body.group_id).populate(
+        "_id"
+      );
       if (!find_group) {
         return {
           EM: "Cannot find group",
@@ -100,20 +93,18 @@ const registerNewUser = async (rawUserData) => {
 
       // create new user
       const user = new User({
-        username: rawUserData.username,
-        email: rawUserData.email,
+        username: req.body.username,
+        email: req.body.email,
         password: hashPassword,
         group: {
           group_id: find_group._id,
           group_name: find_group.group_name,
         },
-        image: imageUploadResult.DT.path,
+        //image: imageUploadResult.DT.path,
       });
 
-      if (rawUserData.faculty_id) {
-        const find_faculty = await FacultyModel.findById(
-          rawUserData.faculty_id
-        );
+      if (req.body.faculty_id) {
+        const find_faculty = await FacultyModel.findById(req.body.faculty_id);
         if (!find_faculty) {
           return {
             EM: "Can't find Faculty",
@@ -125,12 +116,32 @@ const registerNewUser = async (rawUserData) => {
           faculty_name: find_faculty.faculty_name,
         };
       }
+
+      if (req.files.image || req.files) {
+        const image = req.files.image;
+        const allowedImageTypes = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+        if (!allowedImageTypes.test(path.extname(image.name))) {
+          throw new Error("Only image files are allowed (JPEG, JPG, PNG, GIF)");
+        }
+        try {
+          let result_image = await uploadFile.uploadImageUser(image);
+          if (result_image.EC === 0) {
+            user.image = result_image.DT.path;
+          } else {
+            throw new Error("An error occurred while uploading the image");
+          }
+        } catch (error) {
+          console.log("Error uploading image:", error);
+          throw new Error("An error occurred while uploading the image");
+        }
+      }
       try {
         const result = await user.save();
         console.log(result);
         return {
           EM: "User created successfully",
           EC: 0,
+          DT: result,
         };
       } catch (err) {
         console.error("Error creating user:", err);
@@ -146,7 +157,7 @@ const registerNewUser = async (rawUserData) => {
     console.log(">>> Error register new user (service): " + e.message);
     return {
       EM: "Something Wrong with server",
-      EC: 10,
+      EC: 1,
     };
   }
 };

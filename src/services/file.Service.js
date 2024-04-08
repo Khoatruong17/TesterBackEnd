@@ -1,12 +1,22 @@
 const path = require("path");
 
 const uploadImageUser = async (image) => {
-  if (!image || typeof image.name !== "string") {
+  if (!image || !image.name || typeof image.name !== "string") {
     return {
       EM: "Image information missing or invalid",
       EC: 1,
     };
   }
+
+  // Check if the file is an image
+  const allowedImageTypes = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+  if (!allowedImageTypes.test(path.extname(image.name))) {
+    return {
+      EM: "Only image files are allowed (JPEG, JPG, PNG, GIF)",
+      EC: 1,
+    };
+  }
+
   let uploadPath = path.resolve(__dirname, "../public/images");
 
   let extName = path.extname(image.name);
@@ -18,16 +28,16 @@ const uploadImageUser = async (image) => {
   try {
     await image.mv(finalPath);
     return {
-      EM: "Image Upload successfully",
+      EM: "Image uploaded successfully",
       EC: 0,
       DT: {
         path: finalPath,
       },
     };
   } catch (error) {
-    console.log(">> Check error (service upload image): " + error);
+    console.log("Error uploading image:", error);
     return {
-      EM: "File upload image failed ",
+      EM: "An error occurred while uploading the image",
       EC: 1,
     };
   }

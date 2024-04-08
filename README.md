@@ -3,26 +3,27 @@
 
 Login/Register
 
-- Login ---------> POST http://localhost:8081/v1/login
-- Register ---------> POST http://localhost:8081/v1/register
+- Login ---------> POST http://localhost:8081/v1/login (checked)
+- Register ---------> POST http://localhost:8081/v1/register (checked)
   ---> Yêu cầu password:
 - Có 1 chữ cái hoa,
 - Dài hơn 8 kí tự,
 - Có 1 kí tự đặc biệt
+- Phải có ít nhất 1 số trong mk
 
-User
+User:
 
-- Get Data 1 user ---------> GET http://localhost:8081/v1/user/getData ---> truyền vào id
-- Get All Users ---------> GET http://localhost:8081/v1/user/read
-- Edit info User ---------> PUT http://localhost:8081/v1/user/edit ---> truyền vào id (có thể edit username, image, faculty)
+- Get Data 1 user ---------> GET http://localhost:8081/v1/user/getData ---> truyền vào id của user (checked)
+- Get All Users ---------> GET http://localhost:8081/v1/user/read ---> Filter (role_id, faculty_id) (checked)
+  Nếu không truyền sẽ show tất cả user. Nếu truyền thì sẽ show user có role hoặc faculty tương ứng
+
+- Edit info User ---------> PUT http://localhost:8081/v1/user/edit ---> truyền vào id (có thể edit: username, image, faculty)
 - Change Password ---------> PUT http://localhost:8081/v1/user/updatePassword
   ---> truyền vào id, current password, new password, confirm password
   ---> Yêu cầu:
-- Có 1 chữ cái hoa,
-- Dài hơn 8 kí tự,
-- Có 1 kí tự đặc biệt
+  Có 1 chữ cái hoa, dài hơn 8 kí tự, có 1 kí tự đặc biệt, phải có ít nhất 1 số trong mk
 
-- Delete Users ---------> DELETE http://localhost:8081/v1/user/delete ---> truyền vào id
+- Delete Users ---------> DELETE http://localhost:8081/v1/user/delete ---> truyền vào user_id và password của user (checked)
 
 Comment:
 

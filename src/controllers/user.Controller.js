@@ -3,6 +3,7 @@ const router = express.Router();
 const UserModel = require("../models/userModel");
 const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
+const fs = require("fs").promises;
 
 const getdataUser = async (req, res) => {
   try {
@@ -13,6 +14,7 @@ const getdataUser = async (req, res) => {
       email: user.email,
       role: user.group.group_name,
       faculty: user.faculty.faculty_name,
+      image: user.image,
     };
     return res.status(200).json({
       EM: "Successfully",
@@ -31,18 +33,26 @@ const getdataUser = async (req, res) => {
 
 const getAllUser = async (req, res) => {
   try {
-    const allUsers = await UserModel.find();
-    const formattedUsers = [];
-    allUsers.forEach((user) => {
-      const formattedUser = {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.group.group_name,
-        faculty: user.faculty.faculty_name,
-      };
-      formattedUsers.push(formattedUser);
-    });
+    let filter = {};
+
+    if (req.body.role_id) {
+      filter["group.group_id"] = req.body.role_id;
+    }
+
+    if (req.body.faculty_id) {
+      filter["faculty.faculty_id"] = req.body.faculty_id;
+    }
+
+    const allUsers = await UserModel.find(filter);
+    const formattedUsers = allUsers.map((user) => ({
+      _id: user._id,
+      image: user.image,
+      username: user.username,
+      email: user.email,
+      role: user.group.group_name,
+      faculty: user.faculty.faculty_name,
+    }));
+
     return res.status(200).json({
       EM: "Successfully",
       EC: 0,
@@ -166,8 +176,8 @@ const updatePassword = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const { _id, password } = req.body;
-    const user = await UserModel.findOne({ _id: _id });
+    const { user_id, password } = req.body;
+    const user = await UserModel.findOne({ _id: user_id });
     if (!user) {
       return res.status(404).json({
         EM: "User not found",
@@ -183,8 +193,21 @@ const deleteUser = async (req, res) => {
         DT: "",
       });
     }
+    const imagePath = user.image;
+    await UserModel.findOneAndDelete({ user_id: user.id });
 
-    await UserModel.findOneAndDelete({ username });
+    try {
+      await fs.unlink(imagePath);
+      console.log(`Image ${imagePath} has been deleted`);
+    } catch (error) {
+      console.error(`Error deleting image ${imagePath}: ${error}`);
+      return res.status(500).json({
+        EM: "Failed to delete image",
+        EC: 1,
+        DT: "",
+      });
+    }
+    console.log("User deleted successfully");
     return res.status(200).json({
       EM: "User deleted successfully",
       EC: 0,
