@@ -1,6 +1,6 @@
 Làm
-1- Show danh sách tài khoản
-2- Xóa account
+v 1- Show danh sách tài khoản 
+v 2- Xóa account
 3- Validate lại password register
 4- Edit account
 5- 

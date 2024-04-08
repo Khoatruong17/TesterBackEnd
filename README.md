@@ -8,7 +8,17 @@ Login/Register
 
 User
 
+- Get Data 1 user ---------> GET http://localhost:8081/v1/user/getData ---> truyền vào id
 - Get All Users ---------> GET http://localhost:8081/v1/user/read
+- Edit info User ---------> PUT http://localhost:8081/v1/user/edit ---> truyền vào id (có thể edit username, image, faculty)
+- Change Password ---------> PUT http://localhost:8081/v1/user/updatePassword
+  ---> truyền vào id, current password, new password, confirm password
+  ---> Yêu cầu:
+- Có 1 chữ cái hoa,
+- Dài hơn 8 kí tự,
+- Có 1 kí tự đặc biệt
+
+- Delete Users ---------> DELETE http://localhost:8081/v1/user/delete ---> truyền vào id
 
 Comment:
 

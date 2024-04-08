@@ -21,7 +21,11 @@ const initApiRouter = (app) => {
   routerAPI.post("/login", authController.Login);
 
   // User routes
+  routerAPI.get("/user/getData", userController.getdataUser);
   routerAPI.get("/user/read", userController.getAllUser);
+  routerAPI.put("/user/update", userController.editUser);
+  routerAPI.put("/user/updatePassword", userController.updatePassword);
+  routerAPI.delete("/user/delete", userController.deleteUser);
 
   // comment router
   routerAPI.post("/comment/create", commentController.createComment);

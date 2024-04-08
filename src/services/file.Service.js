@@ -1,5 +1,38 @@
 const path = require("path");
 
+const uploadImageUser = async (image) => {
+  if (!image || typeof image.name !== "string") {
+    return {
+      EM: "Image information missing or invalid",
+      EC: 1,
+    };
+  }
+  let uploadPath = path.resolve(__dirname, "../public/images");
+
+  let extName = path.extname(image.name);
+  let basename = path.basename(image.name, extName);
+
+  let finalName = `${basename} - ${Date.now()}${extName}`;
+  let finalPath = `${uploadPath}/${finalName}`;
+
+  try {
+    await image.mv(finalPath);
+    return {
+      EM: "Image Upload successfully",
+      EC: 0,
+      DT: {
+        path: finalPath,
+      },
+    };
+  } catch (error) {
+    console.log(">> Check error (service upload image): " + error);
+    return {
+      EM: "File upload image failed ",
+      EC: 1,
+    };
+  }
+};
+
 const uploadSingleFile = async (file) => {
   if (!file || typeof file.name !== "string") {
     return {
@@ -80,4 +113,5 @@ const uploadMultipleFiles = async (file) => {
 module.exports = {
   uploadSingleFile,
   uploadMultipleFiles,
+  uploadImageUser,
 };

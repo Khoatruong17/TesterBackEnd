@@ -1,15 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const UserModel = require("../models/userModel"); // Import your user model
+const UserModel = require("../models/userModel");
+const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
 
-const verifyPassword = async (password, hashedPassword) => {
+const getdataUser = async (req, res) => {
   try {
-    const match = await bcrypt.compare(password, hashedPassword);
-    return match;
+    const user = await UserModel.findById(req.body.id);
+    const formattedUser = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.group.group_name,
+      faculty: user.faculty.faculty_name,
+    };
+    return res.status(200).json({
+      EM: "Successfully",
+      EC: 0,
+      DT: formattedUser,
+    });
   } catch (error) {
-    console.error("Error verifying password:", error);
-    throw error;
+    console.error(">>> Error getDataUser (controller)", error);
+    return res.status(500).json({
+      EM: "GetDataUsers failed",
+      EC: 1,
+      DT: "",
+    });
   }
 };
 
@@ -19,6 +35,7 @@ const getAllUser = async (req, res) => {
     const formattedUsers = [];
     allUsers.forEach((user) => {
       const formattedUser = {
+        _id: user._id,
         username: user.username,
         email: user.email,
         role: user.group.group_name,
@@ -41,6 +58,152 @@ const getAllUser = async (req, res) => {
   }
 };
 
+const editUser = async (req, res) => {
+  try {
+    const { id, image, faculty_id, username } = req.body;
+    const user = await UserModel.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        EM: "User not found",
+        EC: 1,
+        DT: "",
+      });
+    }
+    if (username) {
+      user.username = username;
+    }
+    if (image) {
+      user.image = image;
+    }
+    if (faculty_id) {
+      const faculty = await FacultyModel.findById(faculty_id);
+      if (!faculty) {
+        return res.status(404).json({
+          EM: "Faculty not found",
+          EC: 1,
+          DT: "",
+        });
+      }
+      user.faculty.faculty_id = faculty_id;
+      user.faculty.faculty_name = faculty.faculty_name;
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      EM: "User updated successfully",
+      EC: 0,
+      DT: user,
+    });
+  } catch (error) {
+    console.error(">>> Error editUser (controller)", error);
+    return res.status(500).json({
+      EM: "Failed to edit user",
+      EC: 1,
+      DT: "",
+    });
+  }
+};
+
+const updatePassword = async (req, res) => {
+  try {
+    const { id, oldPassword, newPassword, confirmPassword } = req.body;
+
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).json({
+        EM: "User not found",
+        EC: 1,
+        DT: "",
+      });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({
+        EM: "Old password is incorrect",
+        EC: 1,
+        DT: "",
+      });
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        EM: "New password must contain at least one uppercase letter, one special character, and be at least 8 characters long",
+        EC: 1,
+        DT: "",
+      });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        EM: "New password and confirm password do not match",
+        EC: 1,
+        DT: "",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({
+      EM: "Password updated successfully",
+      EC: 0,
+      DT: "",
+    });
+  } catch (error) {
+    console.error(">>> Error updatePassword (controller)", error);
+    return res.status(500).json({
+      EM: "Failed to update password",
+      EC: 1,
+      DT: "",
+    });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const { _id, password } = req.body;
+    const user = await UserModel.findOne({ _id: _id });
+    if (!user) {
+      return res.status(404).json({
+        EM: "User not found",
+        EC: 1,
+        DT: "",
+      });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        EM: "User found but incorrect password, please check again",
+        EC: 1,
+        DT: "",
+      });
+    }
+
+    await UserModel.findOneAndDelete({ username });
+    return res.status(200).json({
+      EM: "User deleted successfully",
+      EC: 0,
+      DT: user,
+    });
+  } catch (error) {
+    console.error(">>> Error deleteUser (controller)", error);
+    return res.status(500).json({
+      EM: "Failed to delete user",
+      EC: 1,
+      DT: "",
+    });
+  }
+};
+
 module.exports = {
   getAllUser,
+  deleteUser,
+  getdataUser,
+  editUser,
+  updatePassword,
 };

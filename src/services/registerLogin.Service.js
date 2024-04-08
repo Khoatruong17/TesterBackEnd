@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
-const validator = require('validator');
+const validator = require("validator");
 require("dotenv").config();
 const User = require("../models/userModel");
 const GroupModel = require("../models/groupModel");
 const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
 const getGWR = require("../services/jwt.Service");
+const upFile = require("../services/file.Service");
 const JWTaction = require("../middleware/jwtAction");
 
 //---------------- Register ------------------
@@ -39,12 +40,19 @@ const checkUsername = async (username) => {
 };
 
 const isPasswordStrong = (password) => {
-  return password.length >= 8;
+  const uppercaseRegex = /[A-Z]/;
+  const lengthRegex = /.{8,}/;
+  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+  return (
+    uppercaseRegex.test(password) &&
+    lengthRegex.test(password) &&
+    specialCharRegex.test(password)
+  );
 };
 
 const registerNewUser = async (rawUserData) => {
   try {
-    // check email are exists
     const isEmail = validator.isEmail(rawUserData.email);
     if (isEmail) {
       let isEmailExists = await checkUsername(rawUserData.username);
@@ -61,10 +69,19 @@ const registerNewUser = async (rawUserData) => {
           EC: 1,
         };
       }
-      // hash user password
+
       if (!isPasswordStrong(rawUserData.password)) {
         return {
-          EM: "Password is too weak",
+          EM: "Password must contain at least one uppercase letter, one special character, and be at least 8 characters long.",
+          EC: 1,
+        };
+      }
+
+      // Upload user image
+      const imageUploadResult = await upFile.uploadImageUser(rawUserData.image);
+      if (imageUploadResult.EC !== 0) {
+        return {
+          EM: "Image upload failed",
           EC: 1,
         };
       }
@@ -90,6 +107,7 @@ const registerNewUser = async (rawUserData) => {
           group_id: find_group._id,
           group_name: find_group.group_name,
         },
+        image: imageUploadResult.DT.path,
       });
 
       if (rawUserData.faculty_id) {
@@ -119,7 +137,7 @@ const registerNewUser = async (rawUserData) => {
       }
     } else {
       return {
-        EM: "email is not a email",
+        EM: "email cant find body.email or is not a valid email address, please check email address",
         EC: 1,
         DT: "",
       };
@@ -173,12 +191,12 @@ const UserLogin = async (rawData) => {
         EC: 1,
         DT: "",
       };
-    } else{
+    } else {
       return {
         EM: "user name is not a email or is not email",
         EC: 1,
         DT: "",
-      };  
+      };
     }
   } catch (e) {
     console.log(">>> Error login user (service): " + e.message);
