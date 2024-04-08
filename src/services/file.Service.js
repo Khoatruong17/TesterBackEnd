@@ -7,7 +7,7 @@ const uploadSingleFile = async (file) => {
       EC: 1,
     };
   }
-  let uploadPath = path.resolve(__dirname, "../public/images/upload");
+  let uploadPath = path.resolve(__dirname, "../public/upload");
 
   let extName = path.extname(file.name);
   let basename = path.basename(file.name, extName);
@@ -35,7 +35,7 @@ const uploadSingleFile = async (file) => {
 
 const uploadMultipleFiles = async (file) => {
   try {
-    let uploadPath = path.resolve(__dirname, "../public/images/upload");
+    let uploadPath = path.resolve(__dirname, "../public/upload");
     let resultArr = [];
     let countSuccess = 0;
     for (let i = 0; i < file.length; i++) {
