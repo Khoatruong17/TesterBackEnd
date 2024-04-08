@@ -7,8 +7,8 @@ Login/Register
 - Register ---------> POST http://localhost:8081/v1/register
 
 User
-- Get All Users ---------> GET http://localhost:8081/v1/user/read
 
+- Get All Users ---------> GET http://localhost:8081/v1/user/read
 
 Comment:
 
@@ -18,11 +18,11 @@ Comment:
 
 Comments for Student (Không trả về time)
 
-- Get Comment for Student ----> GET http://localhost:8081/v1/commentforS/read ---> truyền vào contributions_id
+- Get Comment for Student ----> GET http://localhost:8081/v1/commentforS/read ---> truyền vào contribution_id
 
 Comments for Coordinator (Trả về time còn lại)
 
-- Get Comment for Coordinator ----> GET http://localhost:8081/v1/commentforC/read ---> truyền vào contributions_id
+- Get Comment for Coordinator ----> GET http://localhost:8081/v1/commentforC/read ---> truyền vào contribution_id
 
 Contributions:
 
