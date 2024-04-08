@@ -5,6 +5,10 @@ Login/Register
 
 - Login ---------> POST http://localhost:8081/v1/login
 - Register ---------> POST http://localhost:8081/v1/register
+  ---> Yêu cầu password:
+- Có 1 chữ cái hoa,
+- Dài hơn 8 kí tự,
+- Có 1 kí tự đặc biệt
 
 User
 
