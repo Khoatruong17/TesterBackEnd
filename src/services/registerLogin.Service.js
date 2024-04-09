@@ -117,7 +117,7 @@ const registerNewUser = async (req) => {
         };
       }
 
-      if (req.files.image || req.files) {
+      if (req.files && req.files.image) {
         const image = req.files.image;
         const allowedImageTypes = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
         if (!allowedImageTypes.test(path.extname(image.name))) {
