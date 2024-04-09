@@ -71,7 +71,6 @@ const getAllUser = async (req, res) => {
 const editUser = async (req, res) => {
   try {
     const { user_id, faculty_id, username } = req.body;
-    let image = req.files.image;
     const user = await UserModel.findById(user_id);
 
     if (!user) {
