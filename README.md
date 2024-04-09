@@ -10,6 +10,7 @@ Login/Register
 - Dài hơn 8 kí tự,
 - Có 1 kí tự đặc biệt
 - Phải có ít nhất 1 số trong mk
+- Logout ---------> POST http://localhost:8081/v1/logout
 
 User:
 

@@ -19,6 +19,7 @@ const initApiRouter = (app) => {
   // -------------  Register ----------
   routerAPI.post("/register", authController.Register);
   routerAPI.post("/login", authController.Login);
+  routerAPI.post("/logout", authController.Logout);
 
   // User routes
   routerAPI.get("/user/getData", userController.getdataUser);
