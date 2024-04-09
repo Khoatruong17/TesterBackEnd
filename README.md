@@ -17,7 +17,7 @@ User:
 - Get All Users ---------> GET http://localhost:8081/v1/user/read ---> Filter (role_id, faculty_id) (checked)
   Nếu không truyền sẽ show tất cả user. Nếu truyền thì sẽ show user có role hoặc faculty tương ứng
 
-- Edit info User ---------> PUT http://localhost:8081/v1/user/edit ---> truyền vào id (có thể edit: username, image, faculty)
+- Edit info User ---------> PUT http://localhost:8081/v1/user/update ---> truyền vào user_id (có thể edit: username, image, faculty_id)
 - Change Password ---------> PUT http://localhost:8081/v1/user/updatePassword
   ---> truyền vào id, current password, new password, confirm password
   ---> Yêu cầu:

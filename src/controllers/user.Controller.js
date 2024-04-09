@@ -70,8 +70,8 @@ const getAllUser = async (req, res) => {
 
 const editUser = async (req, res) => {
   try {
-    const { id, image, faculty_id, username } = req.body;
-    const user = await UserModel.findById(id);
+    const { user_id, image, faculty_id, username } = req.body;
+    const user = await UserModel.findById(user_id);
 
     if (!user) {
       return res.status(404).json({
