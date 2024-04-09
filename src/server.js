@@ -61,7 +61,7 @@ app.use((req, res) => {
 });
 
 //self running function
-const port = process.env.PORT;
+const PORT = process.env.PORT || 10000;
 const hostname = process.env.HOST_NAME;
 (async () => {
   try {

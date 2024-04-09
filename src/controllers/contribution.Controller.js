@@ -170,6 +170,43 @@ const showcontributionbyFaculty = async (req, res) => {
   }
 };
 
+const showcontributionForGuest = async (req, res) => {
+  try {
+    let cookie = req.cookies;
+    if (!cookie || cookie.length === 0) {
+      return res.status(400).send("No cookies found. Please Login!!!");
+    }
+    const decoded = jwtAction.verifyToken(cookie.jwt);
+    const faculty = await Faculty.findById(decoded.faculty_id);
+    if (!faculty) {
+      throw new Error("Faculty not found, please check faculty_id");
+    }
+    const contribution = await Contributions.find({
+      faculty_id: faculty._id,
+      status: 0,
+    });
+    if (!contribution) {
+      throw new Error("Contribution not found (find by faculty_id)");
+    }
+    const contributionsFiltered = contribution.map((contribution) => {
+      return {
+        topic_name: contribution.topic_name,
+        name: contribution.name,
+        description: contribution.description,
+        document: contribution.document,
+      };
+    });
+    return res.status(200).json({
+      EM: "success",
+      EC: 0,
+      DT: contributionsFiltered,
+    });
+  } catch (error) {
+    console.log("Error get contribution by  --: " + error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // download a contribution from server
 const downloadContribution = async (req, res) => {
   try {
@@ -237,4 +274,5 @@ module.exports = {
   downloadContribution,
   showcontributionbyFaculty,
   delContribution,
+  showcontributionForGuest,
 };

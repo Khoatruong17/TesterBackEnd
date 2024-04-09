@@ -46,6 +46,7 @@ Contributions:
   (requirements: topic_id, name, description, file in body)
 - Show contribution for Faculty ------> GET http://localhost:8081/v1/contribution/readbyfaculty
   \*(truyền vào contributions_id, và status(0,1,2))
+- Show contribution for Guest ------> GET http://localhost:8081/v1/contribution/readforGuest
 
 - Get All Contributors -------> GET http://localhost:8081/v1/contribution/read
 - Download Contribution -------> GET http://localhost:8081/v1/contribution/download/id

@@ -52,6 +52,10 @@ const initApiRouter = (app) => {
     contributionController.showcontributionbyFaculty
   ); // get contribution for Faculty
   routerAPI.get(
+    "/contribution/readforGuest",
+    contributionController.showcontributionForGuest
+  ); // get all contribution
+  routerAPI.get(
     "/contribution/read",
     contributionController.getAllContribution
   ); // get all contribution

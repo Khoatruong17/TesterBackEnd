@@ -183,15 +183,20 @@ const UserLogin = async (rawData) => {
             id: user._id,
             email: user.email,
             groupWithRole,
+            faculty_id: user.faculty ? user.faculty.faculty_id : null,
           });
-          console.log(">>> token", tokenJWT);
           return {
             EM: "Login successful",
             EC: 0,
             DT: {
               access_token: tokenJWT,
               expiresIn: process.env.JWT_EXPIRES_IN,
-              data: { id: user._id, username: user.username, groupWithRole },
+              data: {
+                id: user._id,
+                username: user.username,
+                groupWithRole,
+                faculty_id: user.faculty ? user.faculty.faculty_id : null,
+              },
             },
           };
         }

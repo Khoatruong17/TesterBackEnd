@@ -186,21 +186,26 @@ const deleteUser = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({
-        EM: "User found but incorrect password, please check again",
+        EM: "Incorrect password, please check again!!!",
         EC: 1,
         DT: "",
       });
     }
-    const imagePath = user.image;
-    await UserModel.findOneAndDelete({ user_id: user.id });
+    if (user.image) {
+      const imagePath = user.image;
+      try {
+        await fs.unlink(imagePath);
+        console.log(`Image ${imagePath} has been deleted`);
+      } catch (error) {
+        console.error(`Error deleting image ${imagePath}: ${error}`);
+      }
+    }
+    const result = await UserModel.findOneAndDelete({ _id: user._id });
 
-    try {
-      await fs.unlink(imagePath);
-      console.log(`Image ${imagePath} has been deleted`);
-    } catch (error) {
-      console.error(`Error deleting image ${imagePath}: ${error}`);
-      return res.status(500).json({
-        EM: "Failed to delete image",
+    if (!result) {
+      console.log("User not found or already deleted");
+      return res.status(404).json({
+        EM: "User not found or already deleted",
         EC: 1,
         DT: "",
       });
@@ -209,7 +214,7 @@ const deleteUser = async (req, res) => {
     return res.status(200).json({
       EM: "User deleted successfully",
       EC: 0,
-      DT: user,
+      DT: result,
     });
   } catch (error) {
     console.error(">>> Error deleteUser (controller)", error);
