@@ -83,9 +83,7 @@ const editUser = async (req, res) => {
     if (username) {
       user.username = username;
     }
-    if (image) {
-      user.image = image;
-    }
+
     if (faculty_id) {
       const faculty = await FacultyModel.findById(faculty_id);
       if (!faculty) {
