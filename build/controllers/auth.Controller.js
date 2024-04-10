@@ -7,15 +7,16 @@ const Login = async (req, res) => {
     //set cookie
     res.cookie("jwt", data.DT.access_token, {
       maxAge: 60 * 60 * 1000,
+      domain: "http://localhost:5173/",
       // set time for cookie
-      httpOnly: true // only use from server
+      httpOnly: true, // only use from server
     });
     console.log(">>> Token: ", data.DT.access_token);
     return res.status(200).json({
       EM: data.EM,
       //create user success message
       EC: data.EC,
-      DT: data.DT //data
+      DT: data.DT, //data
     });
   } catch (error) {
     console.log(">> Login Fail", error);
@@ -24,7 +25,7 @@ const Login = async (req, res) => {
       //error message
       EC: "-1",
       //error code
-      DT: "" //data
+      DT: "", //data
     });
   }
 };
@@ -37,7 +38,7 @@ const Register = async (req, res) => {
         //error message
         EC: "1",
         //error code
-        DT: "" //data
+        DT: "", //data
       });
     }
     // service create user
@@ -46,7 +47,7 @@ const Register = async (req, res) => {
       EM: data.EM,
       //create user success message
       EC: data.EC,
-      DT: data.DT //data
+      DT: data.DT, //data
     });
   } catch (e) {
     return res.status(500).json({
@@ -54,7 +55,7 @@ const Register = async (req, res) => {
       //error message
       EC: "-1",
       //error code
-      DT: "" //data
+      DT: "", //data
     });
   }
 };
@@ -66,7 +67,7 @@ const Logout = (req, res) => {
       //error message
       EC: "0",
       //error code
-      DT: "" //data
+      DT: "", //data
     });
   } catch (e) {
     return res.status(500).json({
@@ -74,12 +75,12 @@ const Logout = (req, res) => {
       //error message
       EC: "-1",
       //error code
-      DT: "" //data
+      DT: "", //data
     });
   }
 };
 module.exports = {
   Register,
   Login,
-  Logout
+  Logout,
 };
