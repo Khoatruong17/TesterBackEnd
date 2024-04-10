@@ -71,7 +71,7 @@ const hostname = process.env.HOST_NAME;
       console.log(`App is running at http://${hostname}:${port}/`);
     });
   } catch (err) {
-    console.log(">>> Error connect to DB");
+    console.log(">>> Error start server: " + err);
   }
 })();
 
