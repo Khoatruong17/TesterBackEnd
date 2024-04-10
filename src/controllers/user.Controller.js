@@ -194,10 +194,10 @@ const deleteUser = async (req, res) => {
     if (user.image) {
       const imagePath = user.image;
       try {
-        await fs.unlink(imagePath);
+        fs.unlink(imagePath);
         console.log(`Image ${imagePath} has been deleted`);
       } catch (error) {
-        console.error(`Error deleting image ${imagePath}: ${error}`);
+        console.log(`Error deleting image ${imagePath}: ${error}`);
       }
     }
     const result = await UserModel.findOneAndDelete({ _id: user._id });
