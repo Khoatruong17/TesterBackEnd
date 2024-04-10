@@ -25,7 +25,7 @@ const initApiRouter = (app) => {
   routerAPI.get("/user/getData", userController.getdataUser);
   routerAPI.get("/user/read", userController.getAllUser);
   routerAPI.put("/user/update", userController.editUser);
-  routerAPI.put("/user/updatePassword", userController.updatePassword);
+  routerAPI.put("/user/updatePasword", userController.updatePassword);
   routerAPI.delete("/user/delete", userController.deleteUser);
 
   // comment router

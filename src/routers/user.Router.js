@@ -1,7 +1,7 @@
-const routerAPI = require('express').Router();
+const routerAPI = require("express").Router();
 const userController = require("../controllers/user.Controller");
 
-routerAPI.get('/users', userController.getAllUser);
+routerAPI.get("/users", userController.getAllUser);
 //routerAPI.post("/login", userController.Login);
 
-module.exports = routerAPI
+module.exports = routerAPI;

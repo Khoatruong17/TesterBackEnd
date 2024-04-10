@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const { EventEmitter } = require("events");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
 
 const app = express();
 
@@ -55,7 +56,20 @@ for (let i = 0; i < 20; i++) {
     console.log("Event occurred");
   });
 }
-
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use((req, res) => {
   return res.send("404 Not Found");
 });
