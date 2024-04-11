@@ -1,7 +1,6 @@
 const express = require("express");
 const Group = require("../models/groupModel");
 
-
 const groupController = {
   //Create group
   createGroup: async (req, res) => {
@@ -9,7 +8,7 @@ const groupController = {
       // Create a new group
       const newGroup = await new Group({
         group_name: req.body.group_name,
-        description: req.body.description
+        description: req.body.description,
       });
       // Save the group to the database
       const group = await newGroup.save();
@@ -24,8 +23,8 @@ const groupController = {
   // Get all the groups
   getAllGroup: async (req, res) => {
     try {
-      const group = await Group.find();
-      res.status(200).json(group);
+      const groups = await Group.find({ group_name: { $ne: "Admin" } });
+      res.status(200).json(groups);
       console.log("Get all groups successfully");
     } catch (error) {
       console.log("Error get all groups: " + error);
