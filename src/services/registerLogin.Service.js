@@ -74,7 +74,7 @@ const registerNewUser = async (req) => {
 
       if (!isPasswordStrong(req.body.password)) {
         return {
-          EM: "Password must contain at least one uppercase letter, one special character, and be at least 8 characters long.",
+          EP: "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.",
           EC: 1,
         };
       }
@@ -148,7 +148,7 @@ const registerNewUser = async (req) => {
       }
     } else {
       return {
-        EM: "email cant find body.email or is not a valid email address, please check email address",
+        EM: "Invalid email address",
         EC: 1,
         DT: "",
       };
@@ -193,13 +193,13 @@ const UserLogin = async (rawData) => {
     }
 
     // Check if email length is between 50 and 255
-    if (rawData.email.length < 50 || rawData.email.length > 255) {
-      return {
-        EM: "Email must be between 50 and 255 characters",
-        EC: 1,
-        DT: "",
-      };
-    }
+    // if (rawData.email.length < 10 || rawData.email.length > 55) {
+    //   return {
+    //     EM: "Email must be between 50 and 255 characters",
+    //     EC: 1,
+    //     DT: "",
+    //   };
+    // }
 
     const isEmail = validator.isEmail(rawData.email);
     if (isEmail) {
