@@ -42,6 +42,7 @@ const Register = async (req, res) => {
       EM: data.EM, //create user success message
       EC: data.EC,
       DT: data.DT, //data
+      EP: data.EP
     });
   } catch (e) {
     return res.status(500).json({
