@@ -163,21 +163,50 @@ const registerNewUser = async (req) => {
 };
 
 //---------------- Login ------------------
+//check legnth of password
+const isPasswordLength = (password) => {
+  return password.length >= 8;
+};
+
 const checkPassword = (inputPassword, hashPassword) => {
   return bcrypt.compareSync(inputPassword, hashPassword);
-  // insert right password --> true
-  // insert wrong password --> false
 };
 
 const UserLogin = async (rawData) => {
   try {
+    // Check if email and password are not empty
+    if (!rawData.email || !rawData.password) {
+      return {
+        EM: "Email and password must not be empty",
+        EC: 1,
+        DT: "",
+      };
+    }
+
+    // Check if password length is between 8 and 10
+    if (rawData.password.length < 8 || rawData.password.length > 10) {
+      return {
+        EM: "Password must be between 8 and 10 characters",
+        EC: 1,
+        DT: "",
+      };
+    }
+
+    // Check if email length is between 50 and 255
+    if (rawData.email.length < 50 || rawData.email.length > 255) {
+      return {
+        EM: "Email must be between 50 and 255 characters",
+        EC: 1,
+        DT: "",
+      };
+    }
+
     const isEmail = validator.isEmail(rawData.email);
     if (isEmail) {
       let user = await User.findOne({ email: rawData.email });
       if (user) {
         let IsCorrectPass = checkPassword(rawData.password, user.password);
         if (IsCorrectPass === true) {
-          //token
           let groupWithRole = await getGWR.GetGroupWithRole(user);
           let tokenJWT = await JWTaction.createJWT({
             id: user._id,
@@ -201,7 +230,6 @@ const UserLogin = async (rawData) => {
           };
         }
       }
-      console.log(">>email or password is incorrect");
       return {
         EM: "Your email or password is incorrect",
         EC: 1,
@@ -226,4 +254,4 @@ const UserLogin = async (rawData) => {
 module.exports = {
   registerNewUser,
   UserLogin,
-};
+}

@@ -8,6 +8,7 @@ const Login = async (req, res) => {
     //set cookie
     res.cookie("jwt", data.DT.access_token, {
       maxAge: 60 * 60 * 1000, // set time for cookie
+      domain: "http://localhost:5173/",
       httpOnly: true, // only use from server
     });
     console.log(">>> Token: ", data.DT.access_token);
