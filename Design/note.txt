@@ -4,3 +4,9 @@ v 2- Xóa account
 3- Validate lại password register
 4- Edit account
 5- 
+
+
+11/04
+1 - http://localhost:8081/v1/contribution/readbyfaculty ---> show thêm thời gian còn lại để comment
+2 - http://localhost:8081/v1/contribution/readbyfaculty ---> lấy faculty từ jwt3
+3 - Tạo 1 api để set lại status của contribution

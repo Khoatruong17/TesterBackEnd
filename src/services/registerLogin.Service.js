@@ -74,7 +74,7 @@ const registerNewUser = async (req) => {
 
       if (!isPasswordStrong(req.body.password)) {
         return {
-          EM: "Password must contain at least one uppercase letter, one special character, and be at least 8 characters long.",
+          EP: "Password needs 1 uppercase letter, 1 special character, 1 digit, and minimum 8 characters.",
           EC: 1,
         };
       }
@@ -148,7 +148,7 @@ const registerNewUser = async (req) => {
       }
     } else {
       return {
-        EM: "email cant find body.email or is not a valid email address, please check email address",
+        EM: "Invalid email address",
         EC: 1,
         DT: "",
       };
