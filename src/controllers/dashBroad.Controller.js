@@ -1,4 +1,5 @@
 const dashBroadService = require("../services/dashBroad.Service");
+const jwtAction = require("../middleware/jwtAction");
 
 const dashBroadAdmin = async (req, res) => {
   try {
@@ -19,8 +20,16 @@ const dashBroadAdmin = async (req, res) => {
 
 const dashBroadCoordinator = async (req, res) => {
   try {
-    let data = await dashBroadService.dashBroadCoordinator();
-    return res.status(200).json({
+    let cookie = req.cookies;
+    if (!cookie || Object.keys(cookie).length === 0) {
+      return res.status(400).send("No cookies found. Please Login!!!");
+    }
+    const decoded = jwtAction.verifyToken(cookie.jwt);
+    if (!decoded) {
+      return res.status(400).send("Invalid cookie. Please Login!!!");
+    }
+    let data = await dashBroadService.dashBroadCoordinator(decoded);
+    return res.status(data.status).json({
       EM: data.EM,
       EC: data.EC,
       DT: data.DT,

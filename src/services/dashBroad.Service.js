@@ -97,6 +97,25 @@ const dashBroadAdmin = async (req, res) => {
   }
 };
 
+const dashBroadCoordinator = async (decoded) => {
+  try {
+    console.log(decoded);
+    return {
+      EM: "Export information successfully",
+      EC: 0,
+      DT: "",
+      status: 200,
+    };
+  } catch (error) {
+    console.log(">> Dash broad coordinator error (service): " + error);
+    res.status(500).json({
+      EM: "Export information fail ",
+      EC: 1,
+    });
+  }
+};
+
 module.exports = {
   dashBroadAdmin,
+  dashBroadCoordinator,
 };
