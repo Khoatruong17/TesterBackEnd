@@ -184,13 +184,6 @@ const UserLogin = async (rawData) => {
     }
 
     // Check if password length is between 8 and 10
-    if (rawData.password.length < 8 || rawData.password.length > 10) {
-      return {
-        EM: "Password must be between 8 and 10 characters",
-        EC: 1,
-        DT: "",
-      };
-    }
 
     // Check if email length is between 50 and 255
     // if (rawData.email.length < 10 || rawData.email.length > 55) {
@@ -254,4 +247,4 @@ const UserLogin = async (rawData) => {
 module.exports = {
   registerNewUser,
   UserLogin,
-}
+};

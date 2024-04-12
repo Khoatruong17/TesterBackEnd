@@ -5,6 +5,10 @@ const FacultyModel = require("../models/facultyModel");
 const bcrypt = require("bcrypt");
 const fs = require("fs").promises;
 
+const checkUsername = async (username) => {
+  const usernameExists = await UserModel.exists({ username: username });
+  return usernameExists;
+};
 const getdataUser = async (req, res) => {
   try {
     const user = await UserModel.findById(req.body.id);
@@ -70,10 +74,9 @@ const getAllUser = async (req, res) => {
 
 const editUser = async (req, res) => {
   try {
-    let cookie = req.cookies;
-    console.log(JSON.stringify(cookie));
+    const cookie = req.cookies;
     if (!cookie || !cookie.jwt) {
-      console.log("Could not found JWT cookie");
+      console.log("Could not find JWT cookie");
       return res.status(401).json({
         EM: "You need to login",
         EC: 1,
@@ -82,7 +85,6 @@ const editUser = async (req, res) => {
     }
     const { user_id, faculty_id, username } = req.body;
     const user = await UserModel.findById(user_id);
-
     if (!user) {
       return res.status(404).json({
         EM: "User not found",
@@ -90,10 +92,32 @@ const editUser = async (req, res) => {
         DT: "",
       });
     }
-    if (username) {
-      user.username = username;
+    if (!username || username.trim() === "") {
+      return res.status(400).json({
+        EM: "New username is required",
+        EC: 1,
+        DT: "",
+      });
     }
 
+    if (username.length < 6) {
+      return res.status(400).json({
+        EM: "Username must be at least 6 characters long",
+        EC: 1,
+        DT: "",
+      });
+    }
+
+    const isUserExists = await checkUsername(username);
+    if (isUserExists) {
+      return res.status(400).json({
+        EM: "The username already exists",
+        EC: 1,
+        DT: "",
+      });
+    }
+
+    user.username = username;
     if (faculty_id) {
       const faculty = await FacultyModel.findById(faculty_id);
       if (!faculty) {
