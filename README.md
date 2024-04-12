@@ -1,6 +1,11 @@
 - Command start: npm run dev
 - localhost: 8081
 
+Dash Broad
+
+- Dash broad for Admin ----> GET http://localhost:8081/v1/dashbroadAdmin
+- Dash broad for Coordinator ----> GET http://localhost:8081/v1/dashbroadCoordinator
+
 Login/Register
 
 - Login ---------> POST http://localhost:8081/v1/login (checked)
@@ -47,7 +52,7 @@ Contributions:
 - Show contribution for Faculty ------> GET http://localhost:8081/v1/contribution/readbyfaculty
   \*(truyền vào contributions_id, và status(0,1,2))
 - Show contribution for Guest ------> GET http://localhost:8081/v1/contribution/readforGuest
-
+- Show contribution for Student ------> GET http://localhost:8081/v1/contribution/readforStudent
 - Get All Contributors -------> GET http://localhost:8081/v1/contribution/read
 - Download Contribution -------> GET http://localhost:8081/v1/contribution/download/id
 - Delete Contribution ----> DELETE http://localhost:8081/v1/contribution/delete/:id

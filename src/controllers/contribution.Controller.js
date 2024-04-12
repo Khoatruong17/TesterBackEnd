@@ -415,6 +415,49 @@ const delContribution = async (req, res) => {
   }
 };
 
+const setStatus = async (req, res) => {
+  try {
+    const contributionId = req.body.contribution_id;
+    if (!contributionId) {
+      return res.status(404).json({
+        EM: "contribution_id not found or null",
+        EC: 1,
+      });
+    }
+    const contribution = await Contributions.findById(contributionId);
+    if (!contribution) {
+      return res.status(404).json({
+        EM: "Contribution not found",
+        EC: 1,
+      });
+    }
+    const status = req.body.status;
+    console.log(status);
+    if (status !== undefined && (status == -1 || status == 0 || status == 1)) {
+      contribution.status = status;
+      await contribution.save();
+    } else {
+      return res.status(400).json({
+        EM: "Invalid status value, Status must have value: -1, 0, or 1",
+        EC: 1,
+      });
+    }
+
+    return res.status(200).json({
+      EM: "Set status successfully",
+      EC: 0,
+      DT: contribution,
+    });
+  } catch (error) {
+    console.log(">>> Error status (controller): " + error);
+    res.status(500).json({
+      EM: "Error to set status: ",
+      EC: 1,
+      DT: error.message,
+    });
+  }
+};
+
 module.exports = {
   createContribution,
   getAllContribution,
@@ -423,4 +466,5 @@ module.exports = {
   delContribution,
   showcontributionForGuest,
   showcontributionForStudent,
+  setStatus,
 };

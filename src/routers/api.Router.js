@@ -11,10 +11,15 @@ const checkUser = require("../middleware/jwtAction");
 const topicController = require("../controllers/topic.Controller");
 const upFile = require("../controllers/file.Controller");
 const sendEmail = require("../controllers/sendEmail.Controller");
+const dashBroad = require("../controllers/dashBroad.Controller");
 
 const initApiRouter = (app) => {
   // routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
   // routerAPI.all("*",);
+
+  // ------------- Dashboard --------------------------------
+  routerAPI.get("/dashboardAdmin", dashBroad.dashBroadAdmin);
+  routerAPI.get("/dashboardCoordinator", dashBroad.dashBroadCoordinator);
 
   // -------------  Register ----------
   routerAPI.post("/register", authController.Register);
@@ -67,11 +72,11 @@ const initApiRouter = (app) => {
     "/contribution/delete/:id",
     contributionController.delContribution
   ); // delete
-
   routerAPI.get(
     "/contribution/download/:id",
     contributionController.downloadContribution
   ); // download contribution by id
+  routerAPI.post("/contribution/setStatus", contributionController.setStatus); // set status for contribution
 
   // faculty router
   routerAPI.post("/faculty/create", facultyController.createFaculty);
