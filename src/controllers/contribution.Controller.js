@@ -11,6 +11,7 @@ const Comments = require("../models/commentModel");
 const fs = require("fs").promises;
 const expressZip = require("express-zip");
 const path = require("path");
+const timeSevice = require("../services/time.Service");
 
 const findUser = async (topic_id) => {
   try {
@@ -29,16 +30,55 @@ const findUser = async (topic_id) => {
   }
 };
 
-const returnEmail = async () => {
+const timeRemaining = (submit_date) => {
+  const submit = new Date(submit_date);
+  const deadline = new Date(submit.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days from submit_date
+  const now = new Date();
+
+  const diff = Math.abs(now - deadline); // absolute difference in milliseconds
+
+  const days = Math.floor(diff / (24 * 60 * 60 * 1000)); // convert difference to days
+  const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)); // convert the remaining difference to hours
+
+  if (now > deadline) {
+    return `Deadline exceeded by ${days} days ${hours} hours, you cannot comment.`;
+  } else {
+    return `${days} days ${hours} hours remaining to comment.`;
+  }
+};
+
+const timeRemainingStudent = (deadline, submit_date) => {
   try {
-    const user = await findUser(req.body.topic_id);
-    const email = await User.findOne({ email: user.email });
-    if (!email) {
-      throw new Error("Email not found");
+    const submit = new Date(submit_date);
+    const deadlineDate = new Date(deadline);
+    const now = new Date();
+
+    const earlyTime = Math.abs(deadlineDate - submit);
+    const earlyTime_days = Math.floor(earlyTime / (24 * 60 * 60 * 1000));
+    const earlyTime_hours = Math.floor(
+      (earlyTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
+    );
+
+    if (now > deadlineDate) {
+      const overTime = Math.abs(now - deadlineDate);
+      const overTime_days = Math.floor(overTime / (24 * 60 * 60 * 1000));
+      const overTime_hours = Math.floor(
+        (overTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
+      );
+      return `Deadline has passed. It has been ${overTime_days} days and ${overTime_hours} hours since the deadline.`;
     }
-    return email;
+
+    if (now > submit) {
+      return `You have submitted ${earlyTime_days} days and ${earlyTime_hours} hours early.`;
+    }
+
+    const diff = Math.abs(deadlineDate - now);
+    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+
+    return `${days} days and ${hours} hours remaining to submit.`;
   } catch (error) {
-    console.log("Error finding user by email: " + error);
+    console.log("Error calculating time remaining for student " + error);
     throw error;
   }
 };
@@ -73,6 +113,12 @@ const createContribution = async (req, res) => {
     const topic = await Topic.findById(topic_id);
     if (!topic) {
       throw new Error("Topic not found, please check topic_id");
+    }
+    const deadline = new Date(topic.end_date);
+    if (deadline < new Date()) {
+      throw new Error(
+        "The deadline has passed, you can't submit your contribution anymore."
+      );
     }
     const email = "truongndkgch190486@fpt.edu.vn";
 
@@ -126,8 +172,19 @@ const createContribution = async (req, res) => {
 
 const getAllContribution = async (req, res) => {
   try {
+    const contributions = [];
     const contribution = await Contributions.find();
-
+    for (const item of contribution) {
+      const timeSubmit = timeSevice.convertToGMT7(
+        item.submit_date.toISOString()
+      );
+      const remainingTime = await timeRemaining(item.submit_date);
+      contributions.push({
+        contribution: item,
+        timeSubmit: timeSubmit,
+        remainingTimetoComment: remainingTime,
+      });
+    }
     res.status(200).json(contribution);
     console.log("Get all contributions successfully");
   } catch (error) {
@@ -138,15 +195,33 @@ const getAllContribution = async (req, res) => {
 
 const showcontributionbyFaculty = async (req, res) => {
   try {
-    const faculty = await Faculty.findById(req.body.faculty_id);
+    const cookie = req.cookies;
+    if (!cookie.jwt || cookie.length === 0) {
+      return res.status(400).send("No cookies found. Please Login!!!");
+    }
+    const decoded = jwtAction.verifyToken(cookie.jwt);
+    const faculty_id = decoded.faculty_id;
+    const faculty = await Faculty.findById(faculty_id);
     if (!faculty) {
       throw new Error("Faculty not found, please check faculty_id");
     }
+    const contributionsWithRemainingTime = [];
     const contribution = await Contributions.find({
       faculty_id: faculty._id,
     });
     if (!contribution) {
       throw new Error("Contribution not found (find by faculty_id)");
+    }
+    for (const item of contribution) {
+      const timeSubmit = timeSevice.convertToGMT7(
+        item.submit_date.toISOString()
+      );
+      const remainingTime = await timeRemaining(item.submit_date);
+      contributionsWithRemainingTime.push({
+        contribution: item,
+        timeSubmit: timeSubmit,
+        remainingTimetoComment: remainingTime,
+      });
     }
     const status = req.body.status;
     //const status_contribution = await contribution.find({ status: status });
@@ -155,19 +230,86 @@ const showcontributionbyFaculty = async (req, res) => {
         faculty_id: faculty._id,
         status: status,
       });
+      for (const item of contributionByStatus) {
+        const remainingTime = await timeRemaining(item.submit_date);
+        contributionsWithRemainingTime.push({
+          contribution: item,
+          remainingTimetoComment: remainingTime,
+        });
+      }
       return res.status(200).json({
         EM: "success (get by status)",
         EC: 0,
-        DT: contributionByStatus,
+        DT: {
+          contributionsWithRemainingTime,
+        },
       });
     }
     return res.status(200).json({
       EM: "success",
       EC: 0,
-      DT: contribution,
+      DT: {
+        contributionsWithRemainingTime,
+      },
     });
   } catch (error) {
     console.log("Error get contribution by  --: " + error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const showcontributionForStudent = async (req, res) => {
+  try {
+    const cookie = req.cookies;
+    if (!cookie || !cookie.jwt) {
+      return res.status(400).send("No cookies found. Please Login!!!");
+    }
+    const decoded = jwtAction.verifyToken(cookie.jwt);
+    const faculty_id = decoded.faculty_id;
+    const student_id = decoded.id;
+    const faculty = await Faculty.findById(faculty_id);
+    if (!faculty) {
+      throw new Error("Faculty not found, please check faculty_id");
+    }
+    const contributionsWithRemainingTime = [];
+    const contribution = await Contributions.find({
+      faculty_id: faculty._id,
+      user_id: student_id,
+      status: { $in: [0, 1] },
+    });
+    if (!contribution) {
+      throw new Error("Contribution not found (find by faculty_id)");
+    }
+    for (const item of contribution) {
+      const topic = await Topic.findById(item.topic_id).exec(); // Sử dụng exec() để đảm bảo trả về một promise
+      if (!topic) {
+        throw new Error("Topic not found");
+      }
+      const timeSubmit = timeSevice.convertToGMT7(
+        item.submit_date.toISOString()
+      );
+      const endDate = topic.end_date;
+      if (endDate) {
+        const remainingTime = await timeRemainingStudent(
+          endDate,
+          item.submit_date
+        );
+        contributionsWithRemainingTime.push({
+          contribution: item,
+          timeSubmit: timeSubmit,
+          remainingTimetoSubmit: remainingTime,
+        });
+      }
+    }
+    return res.status(200).json({
+      EM: "success",
+      EC: 0,
+      DT: {
+        contributionsWithRemainingTime,
+      },
+    });
+  } catch (error) {
+    console.log("Error get contribution for Student  --: " + error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -280,4 +422,5 @@ module.exports = {
   showcontributionbyFaculty,
   delContribution,
   showcontributionForGuest,
+  showcontributionForStudent,
 };

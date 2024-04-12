@@ -7,6 +7,6 @@ v 2- Xóa account
 
 
 11/04
-1 - http://localhost:8081/v1/contribution/readbyfaculty ---> show thêm thời gian còn lại để comment
-2 - http://localhost:8081/v1/contribution/readbyfaculty ---> lấy faculty từ jwt3
+1 - http://localhost:8081/v1/contribution/readbyfaculty ---> show thêm thời gian còn lại để comment (ok)
+2 - http://localhost:8081/v1/contribution/readbyfaculty ---> lấy faculty từ jwt3 (ok)
 3 - Tạo 1 api để set lại status của contribution

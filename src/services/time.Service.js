@@ -1,31 +1,34 @@
-const changeTime = (timeUTC) => {
+const convertToGMT7 = (dateString) => {
   try {
-    const dateUTC = new Date(timeUTC);
+    if (!dateString) {
+      throw new Error("A date string is required.");
+    }
+    if (typeof dateString !== "string") {
+      throw new Error("The date string must be a string.");
+    }
+    let date = new Date(dateString);
 
-    dateUTC.setUTCHours(dateUTC.getUTCHours() + 7);
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date string.");
+    }
+    let options = { timeZone: "Asia/Ho_Chi_Minh", hour12: false };
+    let dateInGMT7 = new Date(date.toLocaleString("en-US", options));
+    let formattedDate =
+      dateInGMT7.toLocaleTimeString() + " _ " + dateInGMT7.toLocaleDateString();
 
-    const dayPlus7 = dateUTC.getUTCDate().toString().padStart(2, "0");
-    const monthPlus7 = (dateUTC.getUTCMonth() + 1).toString().padStart(2, "0");
-    const yearPlus7 = dateUTC.getUTCFullYear();
-
-    const hoursPlus7 = dateUTC.getUTCHours().toString().padStart(2, "0");
-    const minutesPlus7 = dateUTC.getUTCMinutes().toString().padStart(2, "0");
-    const secondsPlus7 = dateUTC.getUTCSeconds().toString().padStart(2, "0");
-
-    const timePlus7 = `${yearPlus7}-${monthPlus7}-${dayPlus7} ${hoursPlus7}:${minutesPlus7}:${secondsPlus7}`;
-
-    return {
-      EM: "Change time successfully",
-      EC: 0,
-      DT: timePlus7,
-    };
+    return formattedDate;
   } catch (error) {
-    return {
-      EM: "Change time fail (service)",
-      EC: 1,
-      DT: JSON.stringify(error),
-    };
+    console.error(">>> Message from time Service: ", error);
+    throw error;
   }
 };
 
-module.exports = { changeTime };
+console.log("----------------------------------------------------------------");
+console.log(
+  convertToGMT7(new Date().toISOString()) + " --- Asia/Ho_Chi_Minh Time Zone"
+);
+console.log("Welcome to BackEnd System --- by Khoa Truong");
+console.log("----------------------------------------------------------------");
+console.log("Connecting to Database, please wait...");
+
+module.exports = { convertToGMT7 };
