@@ -3,7 +3,7 @@ const jwtAction = require("../middleware/jwtAction");
 
 const dashBroadAdmin = async (req, res) => {
   try {
-    let data = await dashBroadService.dashBroadAdmin();
+    let data = await dashBroadService.dashBroadAdmin(req.body);
     return res.status(200).json({
       EM: data.EM,
       EC: data.EC,

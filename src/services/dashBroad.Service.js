@@ -2,8 +2,36 @@ const ContributionModel = require("../models/contributionModel");
 const TopicModel = require("../models/topicModel");
 const FacultyModel = require("../models/facultyModel");
 
-const dashBroadAdmin = async (req, res) => {
+const dashBroadAdmin = async (rawData) => {
   try {
+    let year = rawData.year;
+    let month = rawData.month;
+    let start, end;
+
+    if (year) {
+      year = Number(year);
+
+      if (month) {
+        month = Number(month) - 1; // Giảm 1 vì tháng trong JavaScript bắt đầu từ 0 (0 là tháng 1)
+        start = new Date(year, month); // Bắt đầu của tháng
+        end = new Date(year, month + 1); // Bắt đầu của tháng tiếp theo
+      } else {
+        start = new Date(year, 0); // Bắt đầu của năm
+        end = new Date(year + 1, 0); // Bắt đầu của năm tiếp theo
+      }
+
+      const contributiontime = await ContributionModel.find({
+        createdAt: {
+          $gte: start,
+          $lt: end,
+        },
+      });
+
+      return {
+        DT: contributiontime,
+      };
+    }
+    //const month = req.body.month;
     const adminDashboard = [];
     const dashbroadTopic = [];
     const dashbroadFaculty = [];
@@ -99,19 +127,34 @@ const dashBroadAdmin = async (req, res) => {
 
 const dashBroadCoordinator = async (decoded) => {
   try {
-    console.log(decoded);
+    const dashBroadCoordinator = [];
+    console.log(decoded.faculty_id);
+    const topic = await TopicModel.find({
+      faculty_id: decoded.faculty_id,
+    });
+    console.log(topic);
+    if (!topic) {
+      return {
+        EM: "Topic not found",
+        EC: 1,
+        DT: "",
+        status: 404,
+      };
+    }
+    console.log(topic);
     return {
       EM: "Export information successfully",
       EC: 0,
-      DT: "",
+      DT: topic,
       status: 200,
     };
   } catch (error) {
     console.log(">> Dash broad coordinator error (service): " + error);
-    res.status(500).json({
+    return {
       EM: "Export information fail ",
       EC: 1,
-    });
+      status: 400,
+    };
   }
 };
 
