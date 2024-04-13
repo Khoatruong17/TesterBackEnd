@@ -44,15 +44,11 @@ app.use((req, res) => {
   return res.send("404 Not Found");
 });
 
-// Start server
-(async () => {
+app.listen(port, hostname, async () => {
   try {
-    // Test database connection
     await connection();
-    app.listen(port, hostname, () => {
-      console.log(`App is running at http://${hostname}:${port}/`);
-    });
+    console.log(`App is running at http://${hostname}:${port}/`);
   } catch (err) {
-    console.log(">>> Error starting server: " + err);
+    console.log(">>> Lỗi khi khởi động máy chủ: " + err);
   }
-})();
+});
