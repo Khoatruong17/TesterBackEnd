@@ -12,11 +12,16 @@ const topicController = require("../controllers/topic.Controller");
 const upFile = require("../controllers/file.Controller");
 const sendEmail = require("../controllers/sendEmail.Controller");
 const dashBroad = require("../controllers/dashBroad.Controller");
+const path = require("path");
 
 const initApiRouter = (app) => {
   // routerAPI.all("*", checkUser.checkUserJWT, checkUser.checkUserPermission);
   // routerAPI.all("*",);
+  const handleRootPath = (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../public/viewReadMe.html"));
+  };
 
+  routerAPI.get("/", handleRootPath);
   // ------------- Dashboard --------------------------------
   routerAPI.get("/dashboardAdmin", dashBroad.dashBroadAdmin);
   routerAPI.get("/dashboardCoordinator", dashBroad.dashBroadCoordinator);
@@ -111,8 +116,8 @@ const initApiRouter = (app) => {
   routerAPI.post("/file/image", upFile.uploadImage); // upload image
   // send Email
   routerAPI.post("/sendmail", sendEmail.sendMail); // send Email
-  return app.use("/v1/", routerAPI);
-  // return app.use("/", routerAPI);
+  //return app.use("/v1/", routerAPI);
+  return app.use("/", routerAPI);
 };
 
 module.exports = initApiRouter;
