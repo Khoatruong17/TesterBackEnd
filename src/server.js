@@ -12,7 +12,7 @@ const configViewEngine = require("./config/viewEngine");
 const connection = require("./config/database");
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 10000;
 const hostname = process.env.HOST_NAME;
 
 // Middleware
