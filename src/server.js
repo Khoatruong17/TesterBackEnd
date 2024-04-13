@@ -18,8 +18,8 @@ const hostname = process.env.HOST_NAME;
 // Middleware
 app.use(morgan("dev")); // Logging middleware
 app.use(bodyParser.json());
-app.use(express.json());
-app.use(cookieParser());
+// app.use(express.json());
+// app.use(cookieParser());
 app.use(fileUpload());
 app.use(cors());
 
