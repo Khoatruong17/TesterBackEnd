@@ -49,6 +49,6 @@ app.listen(port, hostname, async () => {
     await connection();
     console.log(`App is running at http://${hostname}:${port}/`);
   } catch (err) {
-    console.log(">>> Lỗi khi khởi động máy chủ: " + err);
+    console.log(">>> Err when start server: " + err);
   }
 });
